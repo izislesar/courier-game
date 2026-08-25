@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "courier_game",
+  "project_id": "621e7245-c495-4b93-b640-421c454ad835"
+}
