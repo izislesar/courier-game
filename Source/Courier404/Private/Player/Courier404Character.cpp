@@ -53,6 +53,11 @@ ACourier404Character::ACourier404Character()
 void ACourier404Character::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (FirstPersonCamera)
+	{
+		FirstPersonCamera->FieldOfView = FOV;
+	}
 }
 
 void ACourier404Character::NotifyControllerChanged()
@@ -117,8 +122,8 @@ void ACourier404Character::Move(const FInputActionValue& Value)
 void ACourier404Character::Look(const FInputActionValue& Value)
 {
 	const FVector2D Axis = Value.Get<FVector2D>();
-	AddControllerYawInput(Axis.X * 0.6f);
-	AddControllerPitchInput(Axis.Y * 0.6f);
+	AddControllerYawInput(Axis.X * MouseSensitivity);
+	AddControllerPitchInput(Axis.Y * MouseSensitivity);
 }
 
 void ACourier404Character::Interact()
