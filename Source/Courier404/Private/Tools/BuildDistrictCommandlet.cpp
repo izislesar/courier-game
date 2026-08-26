@@ -5,6 +5,7 @@
 #include "Interaction/Courier404FoodSource.h"
 #include "Interaction/Courier404Package.h"
 #include "Police/Courier404PoliceTrigger.h"
+#include "Encounters/HostileEncounterMarker.h"
 #include "Interaction/Courier404Bed.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/ExponentialHeightFog.h"
@@ -225,8 +226,13 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 		return 1;
 	}
 
-	// -- Hostile courtyard --
+	// -- Hostile courtyard with encounter marker --
 	SpawnBox(World, FVector(650, -650, 8), FVector(120, 100, 8), FName(Courier404Locations::HostileAlley));
+	if (!SpawnInLevel(ACourier404HostileMarker::StaticClass(), FVector(650, -650, 60), FRotator::ZeroRotator))
+	{
+		UE_LOG(LogCourier404, Error, TEXT("Failed to spawn hostile marker"));
+		return 1;
+	}
 
 	// -- Night street lighting along main street --
 	for (const float X : {-900.f, -300.f, 300.f, 900.f})

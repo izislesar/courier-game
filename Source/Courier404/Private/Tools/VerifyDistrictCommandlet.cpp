@@ -4,6 +4,7 @@
 #include "Interaction/Courier404DropPoint.h"
 #include "Interaction/Courier404FoodSource.h"
 #include "Police/Courier404PoliceTrigger.h"
+#include "Encounters/HostileEncounterMarker.h"
 #include "Interaction/Courier404Package.h"
 #include "Interaction/Courier404Bed.h"
 #include "Engine/DirectionalLight.h"
@@ -74,11 +75,14 @@ int32 UVerifyDistrictCommandlet::Main(const FString& Params)
 		DropPoints += Actor->IsA<ACourier404DropPoint>() ? 1 : 0;
 	}
 	bool bHasPoliceTrigger = false;
+	bool bHasHostile = false;
 	for (AActor* Actor : World->PersistentLevel->Actors)
 	{
 		bHasPoliceTrigger |= Actor && Actor->IsA<ACourier404PoliceTrigger>();
+		bHasHostile |= Actor && Actor->IsA<ACourier404HostileMarker>();
 	}
 	if (!bHasPoliceTrigger) { UE_LOG(LogCourier404, Error, TEXT("Missing police trigger")); ++Failures; }
+	if (!bHasHostile) { UE_LOG(LogCourier404, Error, TEXT("Missing hostile marker")); ++Failures; }
 
 	int32 Packages = 0;
 	for (AActor* Actor : World->PersistentLevel->Actors)
