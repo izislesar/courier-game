@@ -23,3 +23,6 @@ Build/*/FileOpenOrder/
 # Local agent/provider credentials and machine-specific Kilo config
 .kilo/kilo.jsonc
 .kilo/*.local.jsonc
+
+# Transient generated performance logs; promote only intentional evidence
+docs/reports/performance/logs/*.log

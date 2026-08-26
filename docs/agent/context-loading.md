@@ -2,79 +2,112 @@
 
 ## Goal
 
-A new model should recover the current project state without needing the previous chat transcript.
+Any new model/session should recover correct project state without the previous chat transcript and without reading the entire repository.
 
-## Recovery invariant
+## Universal recovery
 
-After any of the following:
-- `/compact`;
-- provider/model switch;
-- new agent session;
-- interrupted autonomous run;
-- stale summary suspicion;
-
-run:
+After `/compact`, model/provider switch, new session, interrupted run, or stale-summary suspicion:
 
 ```bash
 bd prime
 bd ready --json
 git status --short
+git branch --show-current
 git log --oneline -12
 ```
 
-Then select a ready issue and run:
+Then read `AGENTS.md` and determine the explicit role.
+
+## Role-aware recovery
+
+### Lead / single-agent
+
+Read the chosen ready issue and relevant L1 docs. Normal one-issue workflow applies.
+
+### Orchestrator / integrator
+
+Also run:
 
 ```bash
-bd show <issue-id> --json
+./scripts/agent-bus.sh status
+./scripts/agent-bus.sh results
+bd blocked --json || bd blocked
 ```
 
-If the compacted/chat summary disagrees with Beads/git, **Beads/git wins**.
+Read `docs/agent/multi-agent-orchestration.md`. Recover which workers are `idle`, `assigned`, `working`, `done`, or `failed` before scheduling anything.
+
+Never trust a stale chat statement about worker state over the bus + git branches.
+
+### Worker
+
+Confirm the expected branch:
+
+```bash
+git branch --show-current
+./scripts/agent-bus.sh status
+```
+
+A worker does **not** choose work from `bd ready`. It waits for its assignment using the bus and reads only issue-relevant context.
 
 ## Context precedence
 
-For task state:
+Task state:
 1. Beads live state;
-2. current git working tree/history;
-3. issue-linked authoritative docs/specs;
-4. latest verification evidence;
-5. historical reports/plans;
-6. chat/compaction summary.
+2. current git branches/worktrees;
+3. agent bus for ephemeral assignment/result state;
+4. issue-linked authoritative docs/specs;
+5. latest verification evidence;
+6. historical reports/plans;
+7. chat/compaction summary.
 
-For product/architecture decisions:
+Product/architecture decisions:
 1. current user instruction;
 2. `AGENTS.md`;
 3. current product/architecture contracts;
-4. Beads issue acceptance criteria;
-5. issue-linked implementation plans;
+4. Beads acceptance criteria;
+5. issue-linked implementation plan;
 6. historical docs.
 
-## Anti-staleness rules
+The bus never overrides Beads task truth.
 
-- Completed epics do not become active because an old report mentions them.
-- Archived bootstrap task graphs are never a task source.
-- Reports describe evidence at a point in time; they do not own future work.
-- `CONTEXT_VERSION` identifies the instruction-pack generation, not current task state.
-- Never create `CURRENT_TASKS.md`, `TODO.md`, `roadmap-checklist.md`, or another persistent tracker competing with Beads.
+## Layered reading
 
-## Efficient reading
+L0:
+- `AGENTS.md`
+- recovery commands
+- explicit role contract
+- assigned issue/task
+- `docs/product/production-readiness.md`
 
-Do not pre-load every product and architecture document for every task.
+L1 only when relevant:
+- gameplay -> `docs/product/gameplay.md`
+- presentation -> `docs/product/art-direction.md`
+- renderer/performance -> `docs/architecture/performance-budget.md`
+- city -> `docs/architecture/city-simulation.md`
+- system design -> `docs/architecture/ue5-architecture.md`
+- verification/release -> `docs/architecture/testing-and-verification.md`
 
-Load issue-relevant context only. This improves cache stability and reduces semantic pollution after compaction.
+L2 evidence/history:
+- `docs/reports/`
+- `docs/archive/`
 
-Examples:
-- mouse feel: gameplay + testing; no need to load relationship/police implementation history;
-- material pass: art direction + performance + production readiness;
-- city density: city simulation + performance + art direction;
-- persistence fix: UE architecture + testing + gameplay state contract;
-- release gate: production readiness + testing + performance + latest reports.
+## Anti-staleness
 
-## Handoff quality
+- Archived/bootstrap task graphs are never current task state.
+- Completed issues do not reactivate because old reports mention them.
+- Reports are point-in-time evidence.
+- Workers never infer a new assignment from an old prompt/result file after the orchestrator has acknowledged it.
+- Reused worker branches must be resynchronized to main between assignments.
+- Never create another persistent task tracker beside Beads.
 
-A durable issue close/update should contain enough evidence that another model can continue without the chat:
+## Durable handoff
+
+Orchestrator Beads notes should preserve:
 - what changed;
-- files/systems affected;
+- worker commit/branch where relevant;
+- integration result;
 - commands run;
 - pass/fail;
-- exact blocker if incomplete;
-- discovered follow-up issue IDs.
+- human-only acceptance still required;
+- exact blocker;
+- discovered follow-up IDs.

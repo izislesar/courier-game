@@ -1,42 +1,41 @@
-# Courier 404 — Agent Context Pack v3 (Production Readiness)
+# Courier 404 — Agent Context Pack v4
 
-This is an **overlay** for an existing Courier 404 repository whose pre-production vertical slice has already been proven.
+Context v4 upgrades the production-readiness repository from a primarily single-agent execution model to a durable **orchestrator + reusable git-worktree workers** model.
 
-It does not recreate Beads tasks and does not reopen completed work.
+## What v4 changes
 
-## What v3 changes
-
-- makes Beads/git recovery authoritative after compaction/model switches;
-- replaces the pre-production overnight objective with production-readiness gates;
-- introduces layered L0/L1/L2 context loading;
-- archives the obsolete bootstrap JSON task graph instead of keeping a second tracker;
-- marks pre-production scope as historical;
-- separates verification reports from task state;
-- documents the generated movable-lighting exception instead of silently contradicting the performance contract;
-- prevents repeated visible-window profiling loops from masquerading as autonomous verification;
-- adds credential hygiene for `.kilo/kilo.jsonc`;
-- makes context validation test the live recovery contract rather than an obsolete bootstrap graph.
+- defines explicit lead/orchestrator/worker roles;
+- makes Beads mutation orchestrator-only during multi-agent runs;
+- defines the shared `git-common-dir` agent bus as coordination state, not task truth;
+- documents safe worker reuse and branch resynchronization;
+- replaces routine worker cherry-picking with ancestry-preserving merge integration;
+- makes the orchestrator the only UE build/cook/package/real-render lane;
+- adds worker/orchestrator prompt templates and a prompt emitter;
+- adds role-aware context recovery after compaction/model switches;
+- adds overnight scheduling/backlog-decomposition rules;
+- strengthens context checks for multi-agent drift;
+- ignores raw transient performance logs by default while keeping summarized reports as durable evidence.
 
 ## Apply
 
-From the repository root, extract the overlay and run:
+From repository root:
 
 ```bash
-tar -xzf courier404-context-v3-production.tar.gz -C .
-./scripts/apply_context_v3.sh
+tar -xzf courier404-context-v4-multi-agent.tar.gz -C .
+./scripts/apply_context_v4.sh
 ```
 
-Then inspect:
+Then run:
 
 ```bash
-bd prime
-bd ready --json
 ./scripts/context_check.sh
+./scripts/agent-bus.sh init
+./scripts/agent-bus.sh status
 git status --short
 ```
 
-## Task-state rule
+## Important invariant
 
-The pack intentionally creates **zero Beads issues**. It is infrastructure/context, not a hidden roadmap.
+Beads remains the authoritative task graph. The agent bus only transports assignments/results between active sessions.
 
-After applying it, the lead agent should inspect current Beads state and create a dependency-ordered production epic only if the intended production work is not already represented.
+Worker completion is not issue completion. Only the orchestrator may integrate, run final UE verification, and close the Beads issue.

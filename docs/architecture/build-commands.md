@@ -54,3 +54,8 @@ Builds Courier404 Linux Development and archives a cooked package under `Package
 ## Concurrency
 
 All UE invocations must be serialized. A mutex-guarded `-WaitMutex` flag is used on every Build.sh call.
+
+
+## Multi-agent ownership
+
+When `docs/agent/multi-agent-orchestration.md` is active, every command in this document that invokes Unreal Build Tool, UnrealEditor, cook, package, shader compilation, or a real renderer belongs to the orchestrator/integrator lane on `main`. Workers must not run these commands in parallel worktrees. Worker validation is intentionally narrower; integrated main receives the authoritative UE verification.

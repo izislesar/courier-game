@@ -1,81 +1,36 @@
 # Project Instructions for AI Agents
 
-This file provides instructions and context for AI coding agents working on this project.
+`AGENTS.md` is the authoritative operating manual for Courier 404. Read it after `bd prime`.
 
-<!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:6cd5cc61 -->
-## Beads Issue Tracker
+This repository uses Beads for durable task state and supports both single-agent and orchestrated multi-agent execution.
 
-This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
-
-### Quick Reference
-
-```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --claim  # Claim work
-bd close <id>         # Complete work
-```
-
-### Rules
-
-- Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
-- Run `bd prime` for detailed command reference and session close protocol
-- Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
-
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
-
-## Agent Context Profiles
-
-The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
-
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
-
-## Session Completion
-
-This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
-
-1. **File issues for remaining work** - Create beads for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **Handle git/sync by active profile**:
-   ```bash
-   # Conservative/minimal/default: report status and proposed commands; wait for approval.
-   git status
-
-   # Team-maintainer opt-in only, unless current instructions forbid it:
-   git pull --rebase
-   git push
-   git status
-   ```
-5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
-
-**Critical rules:**
-- Explicit user or orchestrator instructions override this Beads block.
-- Do not commit or push without clear authority from the active profile or the current user request.
-- If a required sync or push is blocked, stop and report the exact command and error.
-<!-- END BEADS INTEGRATION -->
-
-## Courier 404 project instructions
-
-`AGENTS.md` is the authoritative repository operating manual for all coding agents. Read it after `bd prime`.
-
-Current development phase: production readiness. The completed pre-production slice is historical; do not infer current work from old plans/reports. Current issue state is Beads.
-
-### Build / verification
-
-Use `.ue-env` and `docs/architecture/build-commands.md`. Never substitute the system Arch clang for the UE bundled toolchain. Serialize UE build/cook/editor invocations.
-
-### Context recovery
-
-After compaction/model/provider switch, recover with:
+## Recovery
 
 ```bash
 bd prime
 bd ready --json
 git status --short
+git branch --show-current
 git log --oneline -12
 ```
 
-Then read `AGENTS.md`, the chosen issue, `docs/product/production-readiness.md`, and only issue-relevant docs.
+Then determine the explicit session role:
+- lead/single-agent;
+- orchestrator/integrator on `main`;
+- worker on `agent/w1`, `agent/w2`, or `agent/w3`.
+
+For orchestrated sessions also read:
+- `docs/agent/multi-agent-orchestration.md`
+- `docs/agent/night-run.md`
+
+## Beads
+
+Beads is the only persistent task tracker. Run `bd prime` for command details.
+
+In orchestrated mode only the orchestrator mutates Beads state. Workers do not claim/close/reprioritize issues or edit dependencies.
+
+## Git / UE lane
+
+Workers commit only on their worker branch. The orchestrator integrates to `main` and owns all serialized UE build/cook/package/real-render verification.
+
+Do not substitute Arch system clang for the UE bundled toolchain. Build commands live in `docs/architecture/build-commands.md`.

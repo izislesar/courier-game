@@ -2,12 +2,15 @@
 
 ## Completion rule
 
+In orchestrated mode, a worker reporting `done` means candidate implementation only. The orchestrator/integrator owns final acceptance.
+
 An issue is complete only after:
 1. implementation;
 2. relevant automated checks;
 3. build/compile verification where environment permits;
 4. targeted gameplay smoke verification for integration work;
-5. Beads close with a truthful reason.
+5. integration into `main` when work came from a worker;
+6. Beads close/update by the orchestrator with a truthful reason.
 
 ## Test pyramid for this project
 
@@ -179,3 +182,15 @@ Required smoke matrix:
 Smoke-test important Nanite content with `r.Nanite 0`.
 
 The exact budgets are in `docs/architecture/performance-budget.md`.
+
+
+## Multi-agent verification ownership
+
+During an orchestrated run:
+- workers do not invoke UE project builds, Unreal automation, cook/package, or real-render profiling;
+- workers run only narrow non-UE checks and commit candidate implementation;
+- the orchestrator merges worker branches into `main` and performs the required UE verification serially;
+- Beads closure happens only after integrated-main evidence exists;
+- subjective feel/visual acceptance remains a human gate.
+
+This prevents parallel workers from racing shared UE build artifacts or producing contradictory acceptance evidence.

@@ -116,6 +116,43 @@ fail() {
     printf 'failed:%s\n' "$issue" > "$d/status"
 }
 
+
+worker_path() {
+    local w="$1"
+    local branch="refs/heads/agent/$w"
+    git worktree list --porcelain | awk -v branch="$branch" '
+        $1 == "worktree" { path=$2 }
+        $1 == "branch" && $2 == branch { print path; exit }
+    '
+}
+
+sync_worker() {
+    local w="$1"
+    local d path status branch
+    d="$(worker_dir "$w")"
+    status="$(cat "$d/status" 2>/dev/null || echo idle)"
+    if [[ "$status" != "idle" && "$status" != done:* ]]; then
+        echo "refusing sync: $w status is $status" >&2
+        exit 4
+    fi
+    path="$(worker_path "$w")"
+    if [[ -z "$path" ]]; then
+        echo "worker worktree not found for agent/$w" >&2
+        exit 5
+    fi
+    if [[ -n "$(git -C "$path" status --porcelain)" ]]; then
+        echo "refusing sync: $path is dirty" >&2
+        exit 6
+    fi
+    branch="$(git -C "$path" branch --show-current)"
+    if [[ "$branch" != "agent/$w" ]]; then
+        echo "refusing sync: expected agent/$w, found $branch" >&2
+        exit 7
+    fi
+    git -C "$path" merge --ff-only main
+    echo "$w synced to main"
+}
+
 status() {
     for w in w1 w2 w3; do
         printf '%-3s %s\n' "$w" "$(cat "$BUS/$w/status" 2>/dev/null || echo idle)"
@@ -153,12 +190,14 @@ case "${1:-}" in
     ack) shift; ack "$@" ;;
     fail) shift; fail "$@" ;;
     status) status ;;
+    sync) shift; sync_worker "$@" ;;
     results) results ;;
     wait-result) wait_result ;;
     *)
         echo "usage:"
         echo "  $0 init"
         echo "  $0 status"
+        echo "  $0 sync w1"
         echo "  $0 assign w1 ISSUE PROMPT"
         echo "  $0 wait w1"
         echo "  $0 start w1 ISSUE"
