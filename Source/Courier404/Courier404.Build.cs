@@ -12,8 +12,7 @@ public class Courier404 : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"EnhancedInput",
-			"AssetRegistry"
+			"EnhancedInput"
 		});
 	}
 }
