@@ -1,0 +1,39 @@
+Setting up bundled DotNet SDK
+Running command : dotnet Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.dll Courier404 Linux Development -Project=/home/izislesar/Projects/courier-game/Courier404.uproject -WaitMutex
+Log file: /home/izislesar/.config/Epic/UnrealBuildTool/Log.txt
+Determining max actions to execute in parallel (12 physical cores, 16 logical cores)
+  Executing up to 12 processes, one per physical core
+  Requested 1.5 GB memory per action, 7.99 GB available: limiting max parallel actions to 5
+Using 'git status' to determine working set for adaptive non-unity build (/home/izislesar/Projects/courier-game).
+Creating makefile for Courier404 (no existing makefile)
+UbaStorageServer - FileMapping backing: memfd
+UbaServer - Listening on 0.0.0.0:1345
+UHT compiled-in object format Default
+Building Courier404...
+===== Toolchain Information =====
+Using ISPC compiler (/home/izislesar/UnrealEngine-5.8.2/Engine/Source/ThirdParty/Intel/ISPC/bin/Linux/ispc)
+  Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20240919, LLVM 18.1.6)
+Using Clang compiler 20.1.8 (/home/izislesar/UnrealEngine-5.8.2/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v26_clang-20.1.8-rockylinux8/x86_64-unknown-linux-gnu/bin/clang++)
+  clang version 20.1.8 (github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261) Target: x86_64-unknown-linux-gnu Thread model: posix InstalledDir: /home/izislesar/UnrealEngine-5.8.2/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v26_clang-20.1.8-rockylinux8/x86_64-unknown-linux-gnu/bin
+Using Clang archiver (/home/izislesar/UnrealEngine-5.8.2/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v26_clang-20.1.8-rockylinux8/x86_64-unknown-linux-gnu/bin/llvm-ar)
+  LLVM (http://llvm.org/):   LLVM version 20.1.8   Optimized build.
+Using toolchain located at '/home/izislesar/UnrealEngine-5.8.2/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/Linux_x64/v26_clang-20.1.8-rockylinux8/x86_64-unknown-linux-gnu'
+Using bundled libc++ standard C++ library.
+Compressing debug files
+=================================
+Using Unreal Build Accelerator local executor to run 4 action(s)
+  CPU 12 physical cores, 16 logical cores
+  Memory 15.36 GB physical, 25.41 GB/11.68 GB committed
+  UBA Storage capacity 40 GB
+[1/4] Compile SharedPCH.Engine.Project.ValApi.ValExpApi.Cpp20.h
+[2/4] Compile Module.Courier404.cpp
+In file included from /home/izislesar/Projects/courier-game/Intermediate/Build/Linux/x64/UnrealGame/Development/Courier404/Module.Courier404.cpp:34:
+/home/izislesar/Projects/courier-game/Source/Courier404/Private/City/CitySimulation.cpp:136:10: error: no member named 'SetActorLabel' in 'AStaticMeshActor'
+  136 |         Agent->SetActorLabel(FString::Printf(TEXT("Ambient_%d"), Agents.Num()));
+      |         ~~~~~  ^
+1 error generated.
+Total time in Unreal Build Accelerator local executor: 21.87 seconds
+
+Result: Failed (OtherCompilationError)
+Total execution time: 25.38 seconds
+Trace written to file /home/izislesar/.config/Epic/UnrealBuildTool/Trace.uba with size 5.5kb

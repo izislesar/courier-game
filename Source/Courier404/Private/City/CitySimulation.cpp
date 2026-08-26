@@ -133,7 +133,6 @@ void FCourier404AgentPool::SyncToBudget(int32 Budget, UWorld* World)
 		{
 			break;
 		}
-		Agent->SetActorLabel(FString::Printf(TEXT("Ambient_%d"), Agents.Num()));
 		if (UStaticMeshComponent* Mesh = Agent->GetStaticMeshComponent())
 		{
 			Mesh->SetStaticMesh(Cube);
