@@ -47,6 +47,7 @@ public:
 
 	/** Domain access for world actors and tests. */
 	FCourier404ContractService& GetDomain() { return Service; }
+	const FCourier404ContractService& GetDomain() const { return Service; }
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;

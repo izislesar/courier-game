@@ -58,6 +58,9 @@ public:
 	bool IsDead() const { return Health01 <= 0.f; }
 	float GetTimeStarving() const { return TimeStarvingHours; }
 
+	/** Persistence: exact-state restore (values clamped to valid ranges). */
+	void Restore(float InHunger01, float InFatigue01, float InHealth01, float InTimeStarvingHours);
+
 	FCourier404NeedsModifiers ComputeModifiers() const;
 
 private:

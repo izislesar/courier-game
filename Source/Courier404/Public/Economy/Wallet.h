@@ -29,6 +29,9 @@ public:
 		return true;
 	}
 
+	/** Persistence: exact balance restore (negative rejected). */
+	void SetBalance(int32 Amount) { if (Amount >= 0) { Balance = Amount; } }
+
 private:
 	int32 Balance = 0;
 };

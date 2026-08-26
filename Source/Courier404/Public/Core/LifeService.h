@@ -23,6 +23,8 @@ public:
 
 	FCourier404Wallet& GetWallet() { return Wallet; }
 	const FCourier404Wallet& GetWallet() const { return Wallet; }
+	FCourier404SimClock* GetClock() { return Clock; }
+	const FCourier404SimClock* GetClock() const { return Clock; }
 	FCourier404Needs& GetNeeds() { return Needs; }
 	const FCourier404Needs& GetNeeds() const { return Needs; }
 

@@ -1,5 +1,11 @@
 #include "Time/SimClock.h"
 
+void FCourier404SimClock::Restore(int32 InDayIndex, float InHourOfDay)
+{
+	DayIndex = FMath::Max(1, InDayIndex);
+	HourOfDay = FMath::Fmod(FMath::Max(InHourOfDay, 0.f), HoursPerDay);
+}
+
 int32 FCourier404SimClock::AdvanceHours(float InHours)
 {
 	if (InHours <= 0.f)

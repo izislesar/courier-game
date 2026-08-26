@@ -29,6 +29,8 @@ public:
 	/** Sleep/jump API: moves to TargetHour on the next occurrence. Returns total hours jumped. */
 	float SleepTo(float TargetHour);
 
+	void Restore(int32 InDayIndex, float InHourOfDay);
+
 	float GetHourOfDay() const { return HourOfDay; }
 	int32 GetDayIndex() const { return DayIndex; }
 

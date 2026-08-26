@@ -36,6 +36,9 @@ public:
 	const FContractRuntimeState* FindInstance(FName InstanceId) const;
 	const TMap<FName, FContractRuntimeState>& GetInstances() const { return Instances; }
 
+	/** Persistence: upsert a runtime instance exactly as saved. */
+	void RestoreInstance(const FContractRuntimeState& State);
+
 	/** Oldest Accepted instance whose definition carries CargoId; none when absent. */
 	FName FindActiveInstanceForCargo(FName CargoId) const;
 

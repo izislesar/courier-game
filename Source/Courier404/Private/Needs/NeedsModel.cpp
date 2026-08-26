@@ -5,6 +5,14 @@ namespace
 	constexpr float StarvingThreshold = 0.15f;
 }
 
+void FCourier404Needs::Restore(float InHunger01, float InFatigue01, float InHealth01, float InTimeStarvingHours)
+{
+	Hunger01 = FMath::Clamp(InHunger01, 0.f, 1.f);
+	Fatigue01 = FMath::Clamp(InFatigue01, 0.f, 1.f);
+	Health01 = FMath::Clamp(InHealth01, 0.f, 1.f);
+	TimeStarvingHours = FMath::Max(0.f, InTimeStarvingHours);
+}
+
 void FCourier404Needs::Advance(float InHours)
 {
 	if (InHours <= 0.f)

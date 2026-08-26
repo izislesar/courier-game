@@ -128,6 +128,16 @@ const FContractRuntimeState* FCourier404ContractService::FindInstance(FName Inst
 	return Instances.Find(InstanceId);
 }
 
+void FCourier404ContractService::RestoreInstance(const FContractRuntimeState& State)
+{
+	if (!Definitions.Contains(State.ContractId))
+	{
+		UE_LOG(LogCourier404, Warning, TEXT("RestoreInstance: unknown contract %s"), *State.ContractId.ToString());
+		return;
+	}
+	Instances.Add(State.InstanceId, State);
+}
+
 FName FCourier404ContractService::FindActiveInstanceForCargo(FName CargoId) const
 {
 	const FContractRuntimeState* Best = nullptr;

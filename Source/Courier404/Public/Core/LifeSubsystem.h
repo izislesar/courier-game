@@ -15,6 +15,7 @@ class COURIER404_API ULifeSubsystem : public UGameInstanceSubsystem
 
 public:
 	FCourier404LifeService& GetLife() { return Life; }
+	const FCourier404LifeService& GetLife() const { return Life; }
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
