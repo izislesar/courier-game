@@ -4,6 +4,7 @@
 #include "Interaction/Courier404DropPoint.h"
 #include "Interaction/Courier404FoodSource.h"
 #include "Interaction/Courier404Package.h"
+#include "Police/Courier404PoliceTrigger.h"
 #include "Interaction/Courier404Bed.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/ExponentialHeightFog.h"
@@ -216,8 +217,13 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 		Risky->Tags.Add(FName(Courier404Locations::DropRisky));
 	}
 
-	// -- Police route marker (patrol path anchor) --
+	// -- Police patrol zone (stop request volume) --
 	SpawnBox(World, FVector(0, 250, 8), FVector(30, 30, 8), FName(Courier404Locations::PoliceRoute));
+	if (!SpawnInLevel(ACourier404PoliceTrigger::StaticClass(), FVector(0, 250, 20), FRotator::ZeroRotator))
+	{
+		UE_LOG(LogCourier404, Error, TEXT("Failed to spawn police trigger"));
+		return 1;
+	}
 
 	// -- Hostile courtyard --
 	SpawnBox(World, FVector(650, -650, 8), FVector(120, 100, 8), FName(Courier404Locations::HostileAlley));
