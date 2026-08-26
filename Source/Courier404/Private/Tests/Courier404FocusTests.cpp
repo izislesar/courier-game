@@ -1,5 +1,5 @@
-#include "Misc/AutomationTest.h"
 #include "Courier404FocusTests.h"
+#include "Misc/AutomationTest.h"
 #include "Courier404.h"
 #include "Interaction/InteractorComponent.h"
 #include "Engine/World.h"

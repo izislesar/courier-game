@@ -1,6 +1,6 @@
+#include "Courier404InteractionTests.h"
 #include "Misc/AutomationTest.h"
 #include "Interaction/InteractionComponent.h"
-#include "Courier404InteractionTests.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
 
