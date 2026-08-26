@@ -48,6 +48,9 @@ public:
 	/** Oldest PickedUp instance whose definition carries CargoId; none when absent. */
 	FName FindPickedUpInstanceForCargo(FName CargoId) const;
 
+	/** Oldest non-terminal (Accepted or PickedUp) instance for CargoId. */
+	FName FindOpenInstanceForCargo(FName CargoId) const;
+
 	FCourierOnContractCompleted OnContractCompleted;
 	FCourierOnContractFailed OnContractFailed;
 

@@ -44,8 +44,14 @@ public:
 	 */
 	float SleepTo(float TargetHour);
 
-	/** Passive passage of time (called by tick/integration). */
+	/** Passive passage of time (needs only; clock moved separately). */
 	void Advance(float Hours) { Needs.Advance(Hours); }
+
+	/**
+	 * Realtime pacing: advances BOTH the clock and needs together.
+	 * DeltaRealSeconds of wall time becomes DeltaRealSeconds*TimeScale of game time.
+	 */
+	void TickRealtime(float DeltaRealSeconds, float TimeScale = 60.f);
 
 private:
 	FCourier404SimClock* Clock = nullptr;

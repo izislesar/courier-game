@@ -138,6 +138,16 @@ void FCourier404ContractService::RestoreInstance(const FContractRuntimeState& St
 	Instances.Add(State.InstanceId, State);
 }
 
+FName FCourier404ContractService::FindOpenInstanceForCargo(FName CargoId) const
+{
+	const FName Active = FindActiveInstanceForCargo(CargoId);
+	if (!Active.IsNone())
+	{
+		return Active;
+	}
+	return FindPickedUpInstanceForCargo(CargoId);
+}
+
 int32 FCourier404ContractService::GetPoliceRiskForCargo(FName CargoId) const
 {
 	int32 Highest = 0;

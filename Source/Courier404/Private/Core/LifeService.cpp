@@ -1,5 +1,19 @@
 #include "Core/LifeService.h"
 
+void FCourier404LifeService::TickRealtime(float DeltaRealSeconds, float TimeScale)
+{
+	if (DeltaRealSeconds <= 0.f || TimeScale <= 0.f)
+	{
+		return;
+	}
+	const float GameHours = (DeltaRealSeconds * TimeScale) / 3600.f;
+	if (Clock)
+	{
+		Clock->AdvanceHours(GameHours);
+	}
+	Needs.Advance(GameHours);
+}
+
 bool FCourier404LifeService::Eat(float ElapsedHoursSinceLastVisit, int32 Price)
 {
 	if (Price <= 0 || ElapsedHoursSinceLastVisit < 0.f)
