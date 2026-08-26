@@ -1,0 +1,192 @@
+{
+  "epic": "Courier 404 — Pre-Production Vertical Slice",
+  "tasks": [
+    {
+      "key": "foundation",
+      "priority": 0,
+      "title": "Bootstrap UE5 C++ project and reproducible build verification",
+      "deps": []
+    },
+    {
+      "key": "interaction",
+      "priority": 0,
+      "title": "Implement first-person player and reusable physical interaction framework",
+      "deps": [
+        "foundation"
+      ]
+    },
+    {
+      "key": "world",
+      "priority": 0,
+      "title": "Build compact district and apartment vertical-slice blockout with lighting intent",
+      "deps": [
+        "foundation"
+      ]
+    },
+    {
+      "key": "vehicle",
+      "priority": 0,
+      "title": "Implement one drivable used car with enter/exit and cargo-facing API",
+      "deps": [
+        "foundation",
+        "interaction"
+      ]
+    },
+    {
+      "key": "contracts",
+      "priority": 0,
+      "title": "Implement data-driven contract definitions and deterministic runtime state",
+      "deps": [
+        "foundation"
+      ]
+    },
+    {
+      "key": "package",
+      "priority": 0,
+      "title": "Implement physical package pickup, carry/cargo placement and delivery validation",
+      "deps": [
+        "interaction",
+        "contracts",
+        "vehicle"
+      ]
+    },
+    {
+      "key": "phone",
+      "priority": 1,
+      "title": "Implement minimal diegetic phone jobs/messages UI",
+      "deps": [
+        "contracts",
+        "interaction"
+      ]
+    },
+    {
+      "key": "normal_loop",
+      "priority": 0,
+      "title": "Complete normal delivery end-to-end with payout",
+      "deps": [
+        "world",
+        "vehicle",
+        "package",
+        "phone"
+      ]
+    },
+    {
+      "key": "clock",
+      "priority": 1,
+      "title": "Implement simulated clock and day/night lifecycle",
+      "deps": [
+        "foundation"
+      ]
+    },
+    {
+      "key": "needs",
+      "priority": 1,
+      "title": "Implement hunger and fatigue domain model with slow consequences",
+      "deps": [
+        "clock",
+        "interaction"
+      ]
+    },
+    {
+      "key": "food_sleep",
+      "priority": 1,
+      "title": "Implement food purchase/eating and bed sleep interactions",
+      "deps": [
+        "world",
+        "needs"
+      ]
+    },
+    {
+      "key": "save",
+      "priority": 0,
+      "title": "Implement versioned save/load for durable pre-prod state",
+      "deps": [
+        "contracts",
+        "clock",
+        "needs",
+        "normal_loop"
+      ]
+    },
+    {
+      "key": "relationship",
+      "priority": 1,
+      "title": "Implement girlfriend planned interaction and scheduling consequence",
+      "deps": [
+        "clock",
+        "phone",
+        "save"
+      ]
+    },
+    {
+      "key": "anonymous",
+      "priority": 0,
+      "title": "Implement optional anonymous high-risk contract flow",
+      "deps": [
+        "normal_loop",
+        "clock",
+        "phone",
+        "save"
+      ]
+    },
+    {
+      "key": "police",
+      "priority": 1,
+      "title": "Implement police stop prototype with warning, fine and arrest outcome",
+      "deps": [
+        "vehicle",
+        "anonymous",
+        "save"
+      ]
+    },
+    {
+      "key": "hostile",
+      "priority": 1,
+      "title": "Implement hostile street encounter with flee, injury, robbery and lethal outcome",
+      "deps": [
+        "interaction",
+        "world",
+        "save"
+      ]
+    },
+    {
+      "key": "death",
+      "priority": 1,
+      "title": "Integrate death handling including violence and prolonged starvation hooks",
+      "deps": [
+        "needs",
+        "hostile",
+        "save"
+      ]
+    },
+    {
+      "key": "art_pass",
+      "priority": 2,
+      "title": "Apply cohesive high-fidelity urban lighting/material/presentation pass",
+      "deps": [
+        "world",
+        "normal_loop",
+        "anonymous"
+      ]
+    },
+    {
+      "key": "integration",
+      "priority": 0,
+      "title": "Integrate full pre-prod life loop into one stable playable slice",
+      "deps": [
+        "relationship",
+        "police",
+        "death",
+        "food_sleep",
+        "art_pass"
+      ]
+    },
+    {
+      "key": "gate",
+      "priority": 0,
+      "title": "Run pre-prod release gate, fix critical blockers and write morning status report",
+      "deps": [
+        "integration"
+      ]
+    }
+  ]
+}

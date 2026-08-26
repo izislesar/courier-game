@@ -1,0 +1,23 @@
+# Unreal Engine generated files
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+.vscode/
+
+# IDE/user files
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userprefs
+
+# Build output
+Build/*/FileOpenOrder/
+*.opensdf
+*.sdf
+
+# Beads runtime/local database files may vary by version.
+# Keep versioned issue/config data, ignore runtime caches only after checking
+# the files created by your installed Beads version.

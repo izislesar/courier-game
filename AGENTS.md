@@ -15,10 +15,12 @@ Then read these files in order:
 2. `docs/product/vision.md`
 3. `docs/product/gameplay.md`
 4. `docs/product/art-direction.md`
-5. `docs/architecture/ue5-architecture.md`
-6. `docs/architecture/testing-and-verification.md`
-7. the Beads issue you are about to work on
-8. the relevant Superpowers spec/plan for that issue
+5. `docs/architecture/performance-budget.md`
+6. `docs/architecture/city-simulation.md`
+7. `docs/architecture/ue5-architecture.md`
+8. `docs/architecture/testing-and-verification.md`
+9. the Beads issue you are about to work on
+10. the relevant Superpowers spec/plan for that issue
 
 Do not begin feature implementation before this context is loaded.
 
@@ -147,6 +149,40 @@ Art rule:
 
 > Mundane objects should look expensive to render, not expensive to own.
 
+## Performance is an architecture invariant
+
+Read `docs/architecture/performance-budget.md` before touching rendering, world building, assets, NPCs, traffic or packaging.
+
+Hard rules:
+
+- The baseline renderer must remain complete with Lumen disabled.
+- Nanite may be used selectively but may not replace asset/LOD discipline.
+- VSM is a scalable High/Ultra option, not a baseline dependency.
+- MegaLights/experimental renderer features may not become shipping dependencies without a measured profiling issue and explicit approval.
+- Default ordinary prop textures are 512–1024; 2048 is the normal upper bound for important assets; 4096 requires justification; 8192 shipping content is prohibited.
+- Low scalability is a supported art target.
+- The project must be profiled in packaged builds, not judged by editor FPS alone.
+- Asset size and package size are engineering budgets.
+- Do not import and ship marketplace/Megascans assets at source resolution without reduction, LOD/fallback and size review.
+- Do not add unrestricted Tick to ambient actors.
+- No issue that materially changes rendering, city population or asset footprint is complete without checking its relevant performance budget.
+
+Reference targets and exact frame/size budgets live in `docs/architecture/performance-budget.md`.
+
+## Living city invariant
+
+Read `docs/architecture/city-simulation.md` before implementing pedestrians, ambient NPCs or traffic.
+
+The city must feel alive, but full AI is reserved for nearby/important characters.
+
+Use hierarchical simulation:
+
+- off-screen citizens: persistent data records;
+- visible background population: lightweight agents/Mass where useful;
+- nearby/important NPCs: full Character/Pawn behavior.
+
+Do not build every citizen as an always-ticking `ACharacter`.
+
 ## Gameplay rules
 
 The player is vulnerable.
@@ -208,83 +244,3 @@ Never close a Beads issue only because code was written.
 Verify according to `docs/architecture/testing-and-verification.md`.
 
 If a build/test cannot run because the environment lacks UE5, say so explicitly in the issue and commit message. Do not fabricate success.
-
-<!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:970c3bf2 -->
-## Beads Issue Tracker
-
-This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
-
-### Quick Reference
-
-```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --claim  # Claim work
-bd close <id>         # Complete work
-```
-
-### Rules
-
-- Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
-- Run `bd prime` for detailed command reference and session close protocol
-- Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
-
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
-
-## Agent Context Profiles
-
-The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
-
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
-
-## Session Completion
-
-This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
-
-1. **File issues for remaining work** - Create beads for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **Handle git/sync by active profile**:
-   ```bash
-   # Conservative/minimal/default: report status and proposed commands; wait for approval.
-   git status
-
-   # Team-maintainer opt-in only, unless current instructions forbid it:
-   git pull --rebase
-   bd dolt push
-   git push
-   git status
-   ```
-5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
-
-**Critical rules:**
-- Explicit user or orchestrator instructions override this Beads block.
-- Do not commit or push without clear authority from the active profile or the current user request.
-- If a required sync or push is blocked, stop and report the exact command and error.
-<!-- END BEADS INTEGRATION -->
-
-<!-- BEGIN BEADS CODEX SETUP: generated by bd setup codex -->
-## Beads Issue Tracker
-
-Use Beads (`bd`) for durable task tracking in repositories that include it. Use the `beads` skill at `.agents/skills/beads/SKILL.md` (project install) or `~/.agents/skills/beads/SKILL.md` (global install) for Beads workflow guidance, then use the `bd` CLI for issue operations.
-
-### Quick Reference
-
-```bash
-bd ready                # Find available work
-bd show <id>            # View issue details
-bd update <id> --claim  # Claim work
-bd close <id>           # Complete work
-bd prime                # Refresh Beads context
-```
-
-### Rules
-
-- Use `bd` for all task tracking; do not create markdown TODO lists.
-- Run `bd prime` when Beads context is missing or stale. Codex 0.129.0+ can load Beads context automatically through native hooks; use `/hooks` to inspect or toggle them.
-- Keep persistent project memory in Beads via `bd remember`; do not create ad hoc memory files.
-
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
-<!-- END BEADS CODEX SETUP -->
