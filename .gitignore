@@ -4,3 +4,18 @@
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# Unreal Engine generated files
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Packaged/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userprefs
+Build/*/FileOpenOrder/
+*.opensdf
+*.sdf

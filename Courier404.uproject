@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.8",
+	"Category": "",
+	"Description": "Courier 404 - first-person urban delivery/life immersive simulation (pre-production vertical slice).",
+	"Modules": [
+		{
+			"Name": "Courier404",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
