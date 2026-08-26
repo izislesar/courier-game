@@ -42,6 +42,7 @@ if [ -x "$BIN" ]; then
   timeout 120 "$BIN" -nullrhi -unattended -nosplash -ExecCmds="quit" -abslog="$BOOT_LOG" > /dev/null 2>&1 || true
   grep -q "SLICE_BOOT INPUT_OK" "$BOOT_LOG" || { echo "GATE FAIL: INPUT_BAD in packaged boot"; fail=1; }
   grep -q "LIGHTS_OK" "$BOOT_LOG" || { echo "GATE FAIL: LIGHTS_BAD in packaged boot"; fail=1; }
+  grep -q "CITY_OK" "$BOOT_LOG" || { echo "GATE FAIL: CITY_BAD in packaged boot"; fail=1; }
   grep -q "LoadMap: /Game/Maps/District01" "$BOOT_LOG" || { echo "GATE FAIL: District01 not loaded"; fail=1; }
 else
   echo "GATE FAIL: packaged binary not found at $BIN"; fail=1

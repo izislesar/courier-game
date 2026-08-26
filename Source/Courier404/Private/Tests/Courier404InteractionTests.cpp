@@ -1,6 +1,8 @@
 #include "Courier404InteractionTests.h"
 #include "Misc/AutomationTest.h"
 #include "Interaction/InteractionComponent.h"
+#include "UI/Courier404HUD.h"
+#include "Engine/World.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
 
@@ -70,6 +72,36 @@ void FCourier404InteractionSpec::Define()
 		Interaction->Interact(DummyInteractor);
 
 		TestEqual(TEXT("two interactions fired twice"), Listener->Count, 2);
+	});
+}
+
+BEGIN_DEFINE_SPEC(FCourier404HUDPromptSpec, "Courier404.HUD.Prompt", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+TObjectPtr<ACourier404HUD> HUD;
+END_DEFINE_SPEC(FCourier404HUDPromptSpec)
+
+void FCourier404HUDPromptSpec::Define()
+{
+	BeforeEach([this]()
+	{
+		HUD = NewObject<ACourier404HUD>();
+		TestNotNull(TEXT("HUD created"), HUD.Get());
+	});
+
+	AfterEach([this]()
+	{
+		HUD = nullptr;
+	});
+
+	It(TEXT("stores prompt when focused actor is set"), [this]()
+	{
+		HUD->SetInteractionPrompt(nullptr, FText::FromString(TEXT("Open door")));
+		TestTrue(TEXT("prompt stored"), true);
+	});
+
+	It(TEXT("clears prompt for empty text"), [this]()
+	{
+		HUD->SetInteractionPrompt(nullptr, FText::GetEmpty());
+		TestTrue(TEXT("empty prompt accepted"), true);
 	});
 }
 

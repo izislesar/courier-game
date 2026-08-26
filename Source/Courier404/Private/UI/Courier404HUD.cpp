@@ -1,7 +1,61 @@
 #include "UI/Courier404HUD.h"
 #include "UI/Courier404PhoneComponent.h"
+#include "Interaction/InteractorComponent.h"
 #include "Engine/Canvas.h"
 #include "Engine/Font.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/Pawn.h"
+
+void ACourier404HUD::BindToInteraction()
+{
+	if (bBoundToInteraction)
+	{
+		return;
+	}
+
+	const APawn* Pawn = PlayerOwner ? PlayerOwner->GetPawn() : nullptr;
+	if (!Pawn)
+	{
+		return;
+	}
+
+	UInteractorComponent* Interactor = Pawn->FindComponentByClass<UInteractorComponent>();
+	if (!Interactor)
+	{
+		return;
+	}
+
+	Interactor->OnFocusChanged.AddDynamic(this, &ACourier404HUD::SetInteractionPrompt);
+	bBoundToInteraction = true;
+}
+
+void ACourier404HUD::SetInteractionPrompt(AActor* FocusedActor, FText Prompt)
+{
+	CurrentPrompt = Prompt;
+	PromptAlpha = Prompt.IsEmpty() ? 0.f : 1.f;
+}
+
+void ACourier404HUD::DrawInteractionPrompt()
+{
+	if (PromptAlpha <= 0.f || CurrentPrompt.IsEmpty() || !Canvas)
+	{
+		return;
+	}
+
+	UFont* Font = GEngine ? GEngine->GetMediumFont() : nullptr;
+	if (!Font)
+	{
+		return;
+	}
+
+	const float CenterX = Canvas->SizeX * 0.5f;
+	const float BottomY = Canvas->SizeY - 120.f;
+
+	FCanvasTextItem TextItem(FVector2D(CenterX, BottomY), CurrentPrompt, Font, FLinearColor::White);
+	TextItem.EnableShadow(FLinearColor::Black);
+	TextItem.bCentreX = true;
+	Canvas->DrawItem(TextItem);
+}
 
 UCourier404PhoneComponent* ACourier404HUD::ResolvePhone() const
 {
@@ -12,6 +66,9 @@ UCourier404PhoneComponent* ACourier404HUD::ResolvePhone() const
 void ACourier404HUD::DrawHUD()
 {
 	Super::DrawHUD();
+
+	BindToInteraction();
+	DrawInteractionPrompt();
 
 	if (const UCourier404PhoneComponent* Phone = ResolvePhone())
 	{
