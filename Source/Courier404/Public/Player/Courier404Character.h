@@ -6,6 +6,7 @@
 class UInputAction;
 class UInputMappingContext;
 class UCameraComponent;
+class UCourier404PhoneComponent;
 class UInteractorComponent;
 struct FInputActionValue;
 
@@ -30,12 +31,31 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Interact();
+	void TogglePhone();
+	void PhoneCycle();
+	void PhoneAccept();
+	void PhoneDecline();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Courier404")
 	TObjectPtr<UCameraComponent> FirstPersonCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Courier404")
 	TObjectPtr<UInteractorComponent> Interactor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Courier404")
+	TObjectPtr<UCourier404PhoneComponent> Phone;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
+	TObjectPtr<UInputAction> PhoneToggleAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
+	TObjectPtr<UInputAction> PhoneCycleAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
+	TObjectPtr<UInputAction> PhoneAcceptAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
+	TObjectPtr<UInputAction> PhoneDeclineAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
 	TSoftObjectPtr<UInputMappingContext> DefaultMappingContext;

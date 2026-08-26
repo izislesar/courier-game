@@ -22,6 +22,8 @@ public:
 	/** Sleep jump to TargetHour (next occurrence). Returns hours jumped. */
 	float SleepTo(float TargetHour);
 
+	const FCourier404SimClock& GetClock() const { return Clock; }
+
 	float GetHourOfDay() const { return Clock.GetHourOfDay(); }
 	int32 GetDayIndex() const { return Clock.GetDayIndex(); }
 	ECourier404DayPhase GetPhase() const { return Clock.GetPhase(); }

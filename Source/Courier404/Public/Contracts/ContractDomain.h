@@ -17,6 +17,7 @@ public:
 	bool RegisterDefinition(const FContractDefinition& Definition, TArray<FString>& OutErrors);
 
 	const FContractDefinition* FindDefinition(FName ContractId) const;
+	const TMap<FName, FContractDefinition>& GetDefinitions() const { return Definitions; }
 
 	/** Creates a runtime instance. Returns none when the contract is unknown. */
 	FName Accept(FName ContractId, float SimTimeSeconds);
@@ -33,6 +34,7 @@ public:
 	bool ExpireIfPastLimit(FName InstanceId, float SimTimeSeconds);
 
 	const FContractRuntimeState* FindInstance(FName InstanceId) const;
+	const TMap<FName, FContractRuntimeState>& GetInstances() const { return Instances; }
 
 	/** Oldest Accepted instance whose definition carries CargoId; none when absent. */
 	FName FindActiveInstanceForCargo(FName CargoId) const;

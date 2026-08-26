@@ -1,5 +1,6 @@
 #include "Player/Courier404Character.h"
 #include "Interaction/InteractorComponent.h"
+#include "UI/Courier404PhoneComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -29,10 +30,20 @@ ACourier404Character::ACourier404Character()
 	static ConstructorHelpers::FObjectFinder<UInputAction> MoveFinder(TEXT("/Game/Input/IA_CourierMove.IA_CourierMove"));
 	static ConstructorHelpers::FObjectFinder<UInputAction> LookFinder(TEXT("/Game/Input/IA_CourierLook.IA_CourierLook"));
 	static ConstructorHelpers::FObjectFinder<UInputAction> InteractFinder(TEXT("/Game/Input/IA_CourierInteract.IA_CourierInteract"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> PhoneToggleFinder(TEXT("/Game/Input/IA_PhoneToggle.IA_PhoneToggle"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> PhoneCycleFinder(TEXT("/Game/Input/IA_PhoneCycle.IA_PhoneCycle"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> PhoneAcceptFinder(TEXT("/Game/Input/IA_PhoneAccept.IA_PhoneAccept"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> PhoneDeclineFinder(TEXT("/Game/Input/IA_PhoneDecline.IA_PhoneDecline"));
 
 	if (MoveFinder.Succeeded()) { MoveAction = MoveFinder.Object; }
 	if (LookFinder.Succeeded()) { LookAction = LookFinder.Object; }
 	if (InteractFinder.Succeeded()) { InteractAction = InteractFinder.Object; }
+	if (PhoneToggleFinder.Succeeded()) { PhoneToggleAction = PhoneToggleFinder.Object; }
+	if (PhoneCycleFinder.Succeeded()) { PhoneCycleAction = PhoneCycleFinder.Object; }
+	if (PhoneAcceptFinder.Succeeded()) { PhoneAcceptAction = PhoneAcceptFinder.Object; }
+	if (PhoneDeclineFinder.Succeeded()) { PhoneDeclineAction = PhoneDeclineFinder.Object; }
+
+	Phone = CreateDefaultSubobject<UCourier404PhoneComponent>(TEXT("Phone"));
 
 	DefaultMappingContext = TSoftObjectPtr<UInputMappingContext>(
 		FSoftObjectPath(TEXT("/Game/Input/IMC_CourierDefault.IMC_CourierDefault")));
@@ -72,6 +83,22 @@ void ACourier404Character::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		{
 			EIC->BindAction(InteractAction, ETriggerEvent::Started, this, &ACourier404Character::Interact);
 		}
+		if (PhoneToggleAction)
+		{
+			EIC->BindAction(PhoneToggleAction, ETriggerEvent::Started, this, &ACourier404Character::TogglePhone);
+		}
+		if (PhoneCycleAction)
+		{
+			EIC->BindAction(PhoneCycleAction, ETriggerEvent::Started, this, &ACourier404Character::PhoneCycle);
+		}
+		if (PhoneAcceptAction)
+		{
+			EIC->BindAction(PhoneAcceptAction, ETriggerEvent::Started, this, &ACourier404Character::PhoneAccept);
+		}
+		if (PhoneDeclineAction)
+		{
+			EIC->BindAction(PhoneDeclineAction, ETriggerEvent::Started, this, &ACourier404Character::PhoneDecline);
+		}
 	}
 }
 
@@ -96,4 +123,33 @@ void ACourier404Character::Look(const FInputActionValue& Value)
 void ACourier404Character::Interact()
 {
 	Interactor->TryInteract();
+}
+
+void ACourier404Character::TogglePhone()
+{
+	Phone->ToggleOpen();
+}
+
+void ACourier404Character::PhoneCycle()
+{
+	if (Phone->IsOpen())
+	{
+		Phone->GetViewModel().CycleScreen(1);
+	}
+}
+
+void ACourier404Character::PhoneAccept()
+{
+	if (Phone->IsOpen())
+	{
+		Phone->GetViewModel().AcceptSelected();
+	}
+}
+
+void ACourier404Character::PhoneDecline()
+{
+	if (Phone->IsOpen())
+	{
+		Phone->GetViewModel().RejectSelected();
+	}
 }

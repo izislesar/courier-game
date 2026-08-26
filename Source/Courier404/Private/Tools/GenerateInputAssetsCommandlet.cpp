@@ -71,12 +71,20 @@ int32 UGenerateInputAssetsCommandlet::Main(const FString& Params)
 	UInputAction* Interact = EnsureAction(TEXT("IA_CourierInteract"), EInputActionValueType::Boolean);
 	UInputAction* Drive = EnsureAction(TEXT("IA_CourierDrive"), EInputActionValueType::Axis2D);
 	UInputAction* Brake = EnsureAction(TEXT("IA_CourierBrake"), EInputActionValueType::Boolean);
+	UInputAction* PhoneToggle = EnsureAction(TEXT("IA_PhoneToggle"), EInputActionValueType::Boolean);
+	UInputAction* PhoneCycle = EnsureAction(TEXT("IA_PhoneCycle"), EInputActionValueType::Boolean);
+	UInputAction* PhoneAccept = EnsureAction(TEXT("IA_PhoneAccept"), EInputActionValueType::Boolean);
+	UInputAction* PhoneDecline = EnsureAction(TEXT("IA_PhoneDecline"), EInputActionValueType::Boolean);
 
 	SaveAssetPackage(Move->GetOutermost());
 	SaveAssetPackage(Look->GetOutermost());
 	SaveAssetPackage(Interact->GetOutermost());
 	SaveAssetPackage(Drive->GetOutermost());
 	SaveAssetPackage(Brake->GetOutermost());
+	SaveAssetPackage(PhoneToggle->GetOutermost());
+	SaveAssetPackage(PhoneCycle->GetOutermost());
+	SaveAssetPackage(PhoneAccept->GetOutermost());
+	SaveAssetPackage(PhoneDecline->GetOutermost());
 
 	UPackage* ImcPackage = EnsureAssetPackage(TEXT("IMC_CourierDefault"));
 	UInputMappingContext* IMC = FindObject<UInputMappingContext>(ImcPackage, TEXT("IMC_CourierDefault"));
@@ -105,6 +113,10 @@ int32 UGenerateInputAssetsCommandlet::Main(const FString& Params)
 	MapKeyTo(IMC, Move, EKeys::D, false, false);
 	MapKeyTo(IMC, Look, EKeys::Mouse2D, false, false);
 	MapKeyTo(IMC, Interact, EKeys::E, false, false);
+	MapKeyTo(IMC, PhoneToggle, EKeys::Tab, false, false);
+	MapKeyTo(IMC, PhoneCycle, EKeys::Q, false, false);
+	MapKeyTo(IMC, PhoneAccept, EKeys::F, false, false);
+	MapKeyTo(IMC, PhoneDecline, EKeys::R, false, false);
 
 	FAssetRegistryModule::AssetCreated(IMC);
 	SaveAssetPackage(ImcPackage);
