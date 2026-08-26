@@ -3,6 +3,7 @@
 #include "Core/Courier404LocationTags.h"
 #include "Interaction/Courier404DropPoint.h"
 #include "Interaction/Courier404FoodSource.h"
+#include "Interaction/Courier404Package.h"
 #include "Interaction/Courier404Bed.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/ExponentialHeightFog.h"
@@ -179,6 +180,13 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 
 	// -- Ordinary pickup point --
 	SpawnBox(World, FVector(500, -300, 30), FVector(60, 60, 20), FName(Courier404Locations::PickupOrdinary));
+
+	// -- Physical parcel waiting at the ordinary pickup point --
+	if (!SpawnInLevel(ACourier404Package::StaticClass(), FVector(500, -300, 60), FRotator::ZeroRotator))
+	{
+		UE_LOG(LogCourier404, Error, TEXT("Failed to spawn pickup package"));
+		return 1;
+	}
 
 	// -- Ordinary drop-off point (gameplay binding) --
 	if (ACourier404DropPoint* Drop = Cast<ACourier404DropPoint>(

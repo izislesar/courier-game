@@ -3,8 +3,57 @@
 #include "Economy/Wallet.h"
 #include "Core/LifeService.h"
 #include "Time/SimClock.h"
+#include "Contracts/SliceContracts.h"
+#include "Contracts/ContractDomain.h"
+#include "Needs/NeedsModel.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCourier404DeliveryPaysWallet,
+	"Courier404.Life.DeliveryPayoutCreditsWalletOnce",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FCourier404DeliveryPaysWallet::RunTest(const FString& Parameters)
+{
+	FCourier404SimClock Clock;
+	FCourier404LifeService Life(&Clock);
+	Life.GetWallet().Add(50); // starting cash
+
+	FCourier404ContractService Contracts;
+	Courier404SliceContracts::RegisterDefaults(Contracts);
+
+	// Economy bridge mirrors ULifeSubsystem wiring.
+	int32 PayoutEvents = 0;
+	Contracts.OnContractCompleted.AddLambda([&](const FContractRuntimeState&, int32 Payout)
+	{
+		Life.GetWallet().Add(Payout);
+		++PayoutEvents;
+	});
+
+	const FName Instance = Contracts.Accept(TEXT("Job.Courier01"), 0.f);
+	TestFalse(TEXT("slice job accepted"), Instance.IsNone());
+
+	const FName Cargo = TEXT("Cargo.Parcel");
+	const FName PickupInstance = Contracts.FindActiveInstanceForCargo(Cargo);
+	TestEqual(TEXT("cargo binds to accepted job"), PickupInstance, Instance);
+
+	Contracts.MarkPickup(PickupInstance, 30.f);
+	int32 Payout = 0;
+	TestTrue(TEXT("delivery completes"), Contracts.TryDeliver(PickupInstance, TEXT("Point.DropA"), 60.f, Payout));
+	TestEqual(TEXT("payout amount"), Payout, 120);
+	TestEqual(TEXT("wallet credited"), Life.GetWallet().GetBalance(), 170);
+	TestEqual(TEXT("single completion event"), PayoutEvents, 1);
+
+	// Duplicate completion cannot pay twice.
+	int32 Second = 0;
+	TestFalse(TEXT("duplicate delivery refused"), Contracts.TryDeliver(PickupInstance, TEXT("Point.DropA"), 61.f, Second));
+	TestEqual(TEXT("wallet unchanged"), Life.GetWallet().GetBalance(), 170);
+	TestEqual(TEXT("still one event"), PayoutEvents, 1);
+
+	return true;
+}
+
+
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCourier404WalletGuards,
 	"Courier404.Life.WalletNeverInvalid",

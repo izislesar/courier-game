@@ -3,6 +3,7 @@
 #include "Core/Courier404LocationTags.h"
 #include "Interaction/Courier404DropPoint.h"
 #include "Interaction/Courier404FoodSource.h"
+#include "Interaction/Courier404Package.h"
 #include "Interaction/Courier404Bed.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/SkyLight.h"
@@ -71,6 +72,12 @@ int32 UVerifyDistrictCommandlet::Main(const FString& Params)
 		bHasBed |= Actor->IsA<ACourier404Bed>();
 		DropPoints += Actor->IsA<ACourier404DropPoint>() ? 1 : 0;
 	}
+	int32 Packages = 0;
+	for (AActor* Actor : World->PersistentLevel->Actors)
+	{
+		Packages += Actor && Actor->IsA<ACourier404Package>() ? 1 : 0;
+	}
+	if (Packages < 1) { UE_LOG(LogCourier404, Error, TEXT("Missing pickup package")); ++Failures; }
 	if (!bHasFood) { UE_LOG(LogCourier404, Error, TEXT("Missing food source")); ++Failures; }
 	if (!bHasBed) { UE_LOG(LogCourier404, Error, TEXT("Missing bed")); ++Failures; }
 
