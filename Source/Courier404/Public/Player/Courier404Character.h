@@ -76,9 +76,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
 	TObjectPtr<UInputAction> InteractAction;
 
-	UPROPERTY(Config, Category = "Courier404|Camera")
+	UPROPERTY(EditAnywhere, Config, Category = "Courier404|Camera")
 	float MouseSensitivity = 1.0f;
 
-	UPROPERTY(Config, Category = "Courier404|Camera")
+	UPROPERTY(EditAnywhere, Config, Category = "Courier404|Camera")
 	float FOV = 90.0f;
 };
