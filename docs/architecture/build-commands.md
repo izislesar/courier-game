@@ -30,6 +30,14 @@ Verified 2026-08-26: Result Succeeded (UHT codegen + clang compile/link).
 
 Note: first game-target build compiles engine runtime targets and is expected to be long; use only when packaging/runtime verification requires it.
 
+## Packaging / performance
+
+```bash
+scripts/package-development.sh
+```
+
+Builds Courier404 Linux Development and archives a cooked package under `Packaged/LinuxDev`. Measurement protocol and report template: `docs/reports/performance/README.md`.
+
 ## Rules
 
 - Never run multiple Unreal builds/cooks/shader compilations/editor instances concurrently.
