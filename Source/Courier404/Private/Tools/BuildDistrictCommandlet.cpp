@@ -2,6 +2,8 @@
 #include "Courier404.h"
 #include "Core/Courier404LocationTags.h"
 #include "Interaction/Courier404DropPoint.h"
+#include "Interaction/Courier404FoodSource.h"
+#include "Interaction/Courier404Bed.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Engine/PostProcessVolume.h"
@@ -145,8 +147,16 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 	// -- Parking area next to apartment --
 	SpawnBox(World, FVector(-900, -250, 4), FVector(160, 120, 4), FName(Courier404Locations::Parking));
 
-	// -- Convenience store (south of main street) --
+	// -- Convenience store (south of main street) with usable food counter --
 	SpawnBox(World, FVector(-200, -450, 90), FVector(120, 80, 80), FName(Courier404Locations::Store));
+	if (ACourier404FoodSource* Food = Cast<ACourier404FoodSource>(
+		SpawnInLevel(ACourier404FoodSource::StaticClass(), FVector(-200, -360, 50), FRotator(0.f, 180.f, 0.f))))
+	{
+		Food->MealPrice = 15;
+	}
+
+	// -- Bed inside the apartment --
+	SpawnInLevel(ACourier404Bed::StaticClass(), FVector(-1150, 100, 160), FRotator(0.f, 90.f, 0.f));
 
 	// -- Ordinary pickup point --
 	SpawnBox(World, FVector(500, -300, 30), FVector(60, 60, 20), FName(Courier404Locations::PickupOrdinary));

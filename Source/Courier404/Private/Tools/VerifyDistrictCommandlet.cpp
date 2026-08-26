@@ -2,6 +2,8 @@
 #include "Courier404.h"
 #include "Core/Courier404LocationTags.h"
 #include "Interaction/Courier404DropPoint.h"
+#include "Interaction/Courier404FoodSource.h"
+#include "Interaction/Courier404Bed.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/SkyLight.h"
 #include "GameFramework/PlayerStart.h"
@@ -53,6 +55,8 @@ int32 UVerifyDistrictCommandlet::Main(const FString& Params)
 	bool bHasPlayerStart = false;
 	bool bHasSun = false;
 	bool bHasSky = false;
+	bool bHasFood = false;
+	bool bHasBed = false;
 	int32 DropPoints = 0;
 	for (AActor* Actor : World->PersistentLevel->Actors)
 	{
@@ -63,8 +67,12 @@ int32 UVerifyDistrictCommandlet::Main(const FString& Params)
 		bHasPlayerStart |= Actor->IsA<APlayerStart>();
 		bHasSun |= Actor->IsA<ADirectionalLight>();
 		bHasSky |= Actor->IsA<ASkyLight>();
+		bHasFood |= Actor->IsA<ACourier404FoodSource>();
+		bHasBed |= Actor->IsA<ACourier404Bed>();
 		DropPoints += Actor->IsA<ACourier404DropPoint>() ? 1 : 0;
 	}
+	if (!bHasFood) { UE_LOG(LogCourier404, Error, TEXT("Missing food source")); ++Failures; }
+	if (!bHasBed) { UE_LOG(LogCourier404, Error, TEXT("Missing bed")); ++Failures; }
 
 	if (!bHasPlayerStart) { UE_LOG(LogCourier404, Error, TEXT("Missing PlayerStart")); ++Failures; }
 	if (!bHasSun)        { UE_LOG(LogCourier404, Error, TEXT("Missing sun light")); ++Failures; }
