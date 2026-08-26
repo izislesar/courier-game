@@ -201,8 +201,13 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 		return 1;
 	}
 
-	// -- Anonymous locker + risky destination --
+	// -- Anonymous locker + its sealed bag + risky destination --
 	SpawnBox(World, FVector(-500, 300, 40), FVector(50, 40, 60), FName(Courier404Locations::LockerAnonymous));
+	if (ACourier404Package* SealedBag = Cast<ACourier404Package>(
+		SpawnInLevel(ACourier404Package::StaticClass(), FVector(-500, 250, 60), FRotator::ZeroRotator)))
+	{
+		SealedBag->CargoId = TEXT("Cargo.SealedBag");
+	}
 
 	if (ACourier404DropPoint* Risky = Cast<ACourier404DropPoint>(
 		SpawnInLevel(ACourier404DropPoint::StaticClass(), FVector(1000, -700, 60), FRotator::ZeroRotator)))

@@ -39,6 +39,9 @@ public:
 	/** Persistence: upsert a runtime instance exactly as saved. */
 	void RestoreInstance(const FContractRuntimeState& State);
 
+	/** Elevated encounter risk for carrying CargoId (Rule.PoliceRisk definitions). */
+	int32 GetPoliceRiskForCargo(FName CargoId) const;
+
 	/** Oldest Accepted instance whose definition carries CargoId; none when absent. */
 	FName FindActiveInstanceForCargo(FName CargoId) const;
 

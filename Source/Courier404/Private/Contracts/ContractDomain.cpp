@@ -138,6 +138,20 @@ void FCourier404ContractService::RestoreInstance(const FContractRuntimeState& St
 	Instances.Add(State.InstanceId, State);
 }
 
+int32 FCourier404ContractService::GetPoliceRiskForCargo(FName CargoId) const
+{
+	int32 Highest = 0;
+	for (const TPair<FName, FContractDefinition>& Pair : Definitions)
+	{
+		const FContractDefinition& Def = Pair.Value;
+		if (Def.CargoId == CargoId && Def.Rules.Contains(TEXT("Rule.PoliceRisk")))
+		{
+			Highest = FMath::Max(Highest, Def.RiskLevel);
+		}
+	}
+	return Highest;
+}
+
 FName FCourier404ContractService::FindActiveInstanceForCargo(FName CargoId) const
 {
 	const FContractRuntimeState* Best = nullptr;
