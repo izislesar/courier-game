@@ -34,6 +34,12 @@ public:
 
 	const FContractRuntimeState* FindInstance(FName InstanceId) const;
 
+	/** Oldest Accepted instance whose definition carries CargoId; none when absent. */
+	FName FindActiveInstanceForCargo(FName CargoId) const;
+
+	/** Oldest PickedUp instance whose definition carries CargoId; none when absent. */
+	FName FindPickedUpInstanceForCargo(FName CargoId) const;
+
 	FCourierOnContractCompleted OnContractCompleted;
 	FCourierOnContractFailed OnContractFailed;
 

@@ -128,6 +128,54 @@ const FContractRuntimeState* FCourier404ContractService::FindInstance(FName Inst
 	return Instances.Find(InstanceId);
 }
 
+FName FCourier404ContractService::FindActiveInstanceForCargo(FName CargoId) const
+{
+	const FContractRuntimeState* Best = nullptr;
+	for (const TPair<FName, FContractRuntimeState>& Pair : Instances)
+	{
+		const FContractRuntimeState& State = Pair.Value;
+		if (State.Status != EContractStatus::Accepted)
+		{
+			continue;
+		}
+		const FContractDefinition* Definition = Definitions.Find(State.ContractId);
+		if (!Definition || Definition->CargoId != CargoId)
+		{
+			continue;
+		}
+		if (!Best || State.AcceptedAtSimSeconds < Best->AcceptedAtSimSeconds ||
+			(State.AcceptedAtSimSeconds == Best->AcceptedAtSimSeconds && State.InstanceId.LexicalLess(Best->InstanceId)))
+		{
+			Best = &State;
+		}
+	}
+	return Best ? Best->InstanceId : NAME_None;
+}
+
+FName FCourier404ContractService::FindPickedUpInstanceForCargo(FName CargoId) const
+{
+	const FContractRuntimeState* Best = nullptr;
+	for (const TPair<FName, FContractRuntimeState>& Pair : Instances)
+	{
+		const FContractRuntimeState& State = Pair.Value;
+		if (State.Status != EContractStatus::PickedUp)
+		{
+			continue;
+		}
+		const FContractDefinition* Definition = Definitions.Find(State.ContractId);
+		if (!Definition || Definition->CargoId != CargoId)
+		{
+			continue;
+		}
+		if (!Best || State.PickedUpAtSimSeconds < Best->PickedUpAtSimSeconds ||
+			(State.PickedUpAtSimSeconds == Best->PickedUpAtSimSeconds && State.InstanceId.LexicalLess(Best->InstanceId)))
+		{
+			Best = &State;
+		}
+	}
+	return Best ? Best->InstanceId : NAME_None;
+}
+
 FName FCourier404ContractService::MakeInstanceId(FName ContractId, float SimTimeSeconds)
 {
 	++InstanceCounter;

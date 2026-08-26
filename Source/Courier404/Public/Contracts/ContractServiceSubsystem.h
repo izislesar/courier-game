@@ -38,8 +38,15 @@ public:
 
 	const FContractRuntimeState* FindInstance(FName InstanceId) const { return Service.FindInstance(InstanceId); }
 
+	FName FindActiveInstanceForCargo(FName CargoId) const { return Service.FindActiveInstanceForCargo(CargoId); }
+
+	FName FindPickedUpInstanceForCargo(FName CargoId) const { return Service.FindPickedUpInstanceForCargo(CargoId); }
+
 	FCourierOnContractCompleted OnContractCompleted;
 	FCourierOnContractFailed OnContractFailed;
+
+	/** Domain access for world actors and tests. */
+	FCourier404ContractService& GetDomain() { return Service; }
 
 	virtual void Deinitialize() override;
 
