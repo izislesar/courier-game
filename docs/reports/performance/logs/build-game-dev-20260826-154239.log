@@ -1,0 +1,17 @@
+Setting up bundled DotNet SDK
+Running command : dotnet Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.dll Courier404 Linux Development -Project=/home/izislesar/Projects/courier-game/Courier404.uproject -WaitMutex
+Log file: /home/izislesar/.config/Epic/UnrealBuildTool/Log.txt
+Determining max actions to execute in parallel (12 physical cores, 16 logical cores)
+  Executing up to 12 processes, one per physical core
+  Requested 1.5 GB memory per action, 8.14 GB available: limiting max parallel actions to 5
+Using 'git status' to determine working set for adaptive non-unity build (/home/izislesar/Projects/courier-game).
+UbaStorageServer - FileMapping backing: memfd
+UbaServer - Listening on 0.0.0.0:1345
+Target is up to date
+Using Unreal Build Accelerator local executor to run 0 action(s)
+Total time in Unreal Build Accelerator local executor: 0.12 seconds
+Output binary: /home/izislesar/Projects/courier-game/Binaries/Linux/Courier404
+
+Result: Succeeded
+Total execution time: 1.39 seconds
+Trace written to file /home/izislesar/.config/Epic/UnrealBuildTool/Trace.uba with size 2.7kb

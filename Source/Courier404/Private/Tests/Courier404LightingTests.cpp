@@ -12,19 +12,19 @@ bool FCourier404LightingIdentityTest::RunTest(const FString& Parameters)
 {
 	// Night is dark but practicals run at full: night stays readable.
 	const FCourier404PhaseLook Night = FCourier404LightingIdentity::GetLook(ECourier404DayPhase::Night);
-	TestEqual(TEXT("night sun is moonlight-dim"), Night.SunIntensity, 0.08f);
+	TestEqual(TEXT("night sun is moonlight-dim"), Night.SunIntensity, 0.35f);
 	TestEqual(TEXT("night lamps at full"), Night.LampIntensityScale, 1.f);
 	TestTrue(TEXT("night exposure tighter"), Night.ExposureMin < Night.ExposureMax);
 
 	// Day: sun dominates, decorative lamps off.
 	const FCourier404PhaseLook Day = FCourier404LightingIdentity::GetLook(ECourier404DayPhase::Day);
-	TestEqual(TEXT("day sun bright"), Day.SunIntensity, 2.5f);
+	TestEqual(TEXT("day sun bright"), Day.SunIntensity, 10.f);
 	TestEqual(TEXT("day lamps off"), Day.LampIntensityScale, 0.f);
 
 	// Interpolation: mid-morning sits strictly between night and day values.
 	const FCourier404PhaseLook Nine = FCourier404LightingIdentity::GetLookForHour(9.f);
 	TestTrue(TEXT("9am sun between night and day"),
-		Nine.SunIntensity > 0.08f && Nine.SunIntensity < 2.5f);
+		Nine.SunIntensity > 0.35f && Nine.SunIntensity < 10.f);
 	TestTrue(TEXT("9am lamps fading out"),
 		Nine.LampIntensityScale > 0.f && Nine.LampIntensityScale < 1.f);
 

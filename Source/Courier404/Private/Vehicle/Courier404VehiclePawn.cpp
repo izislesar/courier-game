@@ -27,6 +27,7 @@ ACourier404VehiclePawn::ACourier404VehiclePawn()
 
 	static ConstructorHelpers::FObjectFinder<UInputAction> DriveFinder(TEXT("/Game/Input/IA_CourierDrive.IA_CourierDrive"));
 	static ConstructorHelpers::FObjectFinder<UInputAction> BrakeFinder(TEXT("/Game/Input/IA_CourierBrake.IA_CourierBrake"));
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext> DriveIMCFinder(TEXT("/Game/Input/IMC_CourierDrive.IMC_CourierDrive"));
 	if (DriveFinder.Succeeded())
 	{
 		DriveAction = DriveFinder.Object;
@@ -35,8 +36,10 @@ ACourier404VehiclePawn::ACourier404VehiclePawn()
 	{
 		BrakeAction = BrakeFinder.Object;
 	}
-	DriveMappingContext = TSoftObjectPtr<UInputMappingContext>(
-		FSoftObjectPath(TEXT("/Game/Input/IMC_CourierDrive.IMC_CourierDrive")));
+	if (DriveIMCFinder.Succeeded())
+	{
+		DriveMappingContext = DriveIMCFinder.Object;
+	}
 
 	bUseControllerRotationYaw = true;
 }
@@ -187,9 +190,9 @@ void ACourier404VehiclePawn::AddMappingContext()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
 			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
 		{
-			if (TObjectPtr<UInputMappingContext> Context = DriveMappingContext.LoadSynchronous())
+			if (DriveMappingContext)
 			{
-				Subsystem->AddMappingContext(Context, 1);
+				Subsystem->AddMappingContext(DriveMappingContext, 1);
 			}
 		}
 	}

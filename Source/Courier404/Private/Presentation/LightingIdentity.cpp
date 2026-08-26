@@ -21,15 +21,15 @@ FCourier404PhaseLook FCourier404LightingIdentity::GetLook(ECourier404DayPhase Ph
 	switch (Phase)
 	{
 	case ECourier404DayPhase::Morning:
-		return MakeLook(1.8f, FLinearColor(1.f, 0.88f, 0.75f), 0.9f, 0.25f, 0.6f, 1.1f);
+		return MakeLook(6.5f, FLinearColor(1.f, 0.85f, 0.7f), 1.6f, 0.25f, 0.55f, 1.05f);
 	case ECourier404DayPhase::Day:
-		return MakeLook(2.5f, FLinearColor(1.f, 0.95f, 0.88f), 1.f, 0.f, 0.7f, 1.2f);
+		return MakeLook(10.f, FLinearColor(1.f, 0.95f, 0.88f), 2.f, 0.f, 0.7f, 1.2f);
 	case ECourier404DayPhase::Evening:
-		return MakeLook(0.9f, FLinearColor(1.f, 0.72f, 0.5f), 0.55f, 0.8f, 0.5f, 1.0f);
+		return MakeLook(3.f, FLinearColor(1.f, 0.6f, 0.35f), 0.9f, 0.8f, 0.45f, 0.95f);
 	case ECourier404DayPhase::Night:
 	default:
 		// Dark but readable: moonlight key + strong practicals.
-		return MakeLook(0.08f, FLinearColor(0.55f, 0.65f, 1.f), 0.12f, 1.f, 0.25f, 0.7f);
+		return MakeLook(0.35f, FLinearColor(0.5f, 0.62f, 1.f), 0.35f, 1.f, 0.28f, 0.65f);
 	}
 }
 

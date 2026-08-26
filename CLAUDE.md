@@ -57,21 +57,25 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 - If a required sync or push is blocked, stop and report the exact command and error.
 <!-- END BEADS INTEGRATION -->
 
+## Courier 404 project instructions
 
-## Build & Test
+`AGENTS.md` is the authoritative repository operating manual for all coding agents. Read it after `bd prime`.
 
-_Add your build and test commands here_
+Current development phase: production readiness. The completed pre-production slice is historical; do not infer current work from old plans/reports. Current issue state is Beads.
+
+### Build / verification
+
+Use `.ue-env` and `docs/architecture/build-commands.md`. Never substitute the system Arch clang for the UE bundled toolchain. Serialize UE build/cook/editor invocations.
+
+### Context recovery
+
+After compaction/model/provider switch, recover with:
 
 ```bash
-# Example:
-# npm install
-# npm test
+bd prime
+bd ready --json
+git status --short
+git log --oneline -12
 ```
 
-## Architecture Overview
-
-_Add a brief overview of your project architecture_
-
-## Conventions & Patterns
-
-_Add your project-specific conventions here_
+Then read `AGENTS.md`, the chosen issue, `docs/product/production-readiness.md`, and only issue-relevant docs.

@@ -34,6 +34,7 @@ ACourier404Character::ACourier404Character()
 	static ConstructorHelpers::FObjectFinder<UInputAction> PhoneCycleFinder(TEXT("/Game/Input/IA_PhoneCycle.IA_PhoneCycle"));
 	static ConstructorHelpers::FObjectFinder<UInputAction> PhoneAcceptFinder(TEXT("/Game/Input/IA_PhoneAccept.IA_PhoneAccept"));
 	static ConstructorHelpers::FObjectFinder<UInputAction> PhoneDeclineFinder(TEXT("/Game/Input/IA_PhoneDecline.IA_PhoneDecline"));
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMCFinder(TEXT("/Game/Input/IMC_CourierDefault.IMC_CourierDefault"));
 
 	if (MoveFinder.Succeeded()) { MoveAction = MoveFinder.Object; }
 	if (LookFinder.Succeeded()) { LookAction = LookFinder.Object; }
@@ -42,11 +43,11 @@ ACourier404Character::ACourier404Character()
 	if (PhoneCycleFinder.Succeeded()) { PhoneCycleAction = PhoneCycleFinder.Object; }
 	if (PhoneAcceptFinder.Succeeded()) { PhoneAcceptAction = PhoneAcceptFinder.Object; }
 	if (PhoneDeclineFinder.Succeeded()) { PhoneDeclineAction = PhoneDeclineFinder.Object; }
+	if (IMCFinder.Succeeded()) { DefaultMappingContext = IMCFinder.Object; }
 
 	Phone = CreateDefaultSubobject<UCourier404PhoneComponent>(TEXT("Phone"));
 
-	DefaultMappingContext = TSoftObjectPtr<UInputMappingContext>(
-		FSoftObjectPath(TEXT("/Game/Input/IMC_CourierDefault.IMC_CourierDefault")));
+
 }
 
 void ACourier404Character::BeginPlay()
@@ -63,9 +64,9 @@ void ACourier404Character::NotifyControllerChanged()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
 			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
 		{
-			if (TObjectPtr<UInputMappingContext> Context = DefaultMappingContext.LoadSynchronous())
+			if (DefaultMappingContext)
 			{
-				Subsystem->AddMappingContext(Context, 0);
+				Subsystem->AddMappingContext(DefaultMappingContext, 0);
 			}
 		}
 	}

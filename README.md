@@ -1,13 +1,19 @@
 # courier-game
 
-Courier 404 — first-person urban delivery/life immersive simulation (UE5, pre-production vertical slice).
+Courier 404 — first-person urban courier/life simulation in Unreal Engine 5.8.2.
+
+The pre-production vertical slice has been proven; active development is now **production readiness**: player feel, presentation, reliability, packaged performance, save integrity, living-city quality and shipping discipline.
 
 ## Build
 
-See `docs/architecture/build-commands.md` for the authoritative engine path and commands. Requires the engine recorded in `.ue-env`; never use system clang.
+See `docs/architecture/build-commands.md`. Use the engine recorded in `.ue-env`; never replace the UE bundled toolchain with system clang.
 
-## Docs
+## Agent/task context
 
-- Product: `docs/product/` (vision, gameplay, art direction, preprod scope)
-- Architecture: `docs/architecture/` (UE5 architecture, performance budget, city simulation, testing and verification)
-- Task state: Beads (`bd ready`)
+- Agent operating manual: `AGENTS.md`
+- Current task state: Beads (`bd prime`, `bd ready --json`)
+- Production acceptance boundary: `docs/product/production-readiness.md`
+- Context recovery: `docs/agent/context-loading.md`
+- Autonomous run protocol: `docs/agent/night-run.md`
+
+Historical pre-production plans/reports are evidence only and must not override live Beads state.

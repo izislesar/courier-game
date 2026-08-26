@@ -40,6 +40,11 @@ public:
 	/** True while the player is driving (possession held by this pawn). */
 	bool IsBeingDriven() const { return DriverPawn.IsValid(); }
 
+	/** Audit accessors (regression tests; input must hard-reference cooked content). */
+	const TObjectPtr<UInputMappingContext>& GetDriveMappingContext() const { return DriveMappingContext; }
+	const TObjectPtr<UInputAction>& GetDriveAction() const { return DriveAction; }
+	const TObjectPtr<UInputAction>& GetBrakeAction() const { return BrakeAction; }
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Courier404")
 	TObjectPtr<UBoxComponent> BodyCollision;
 
@@ -85,7 +90,7 @@ protected:
 	TObjectPtr<UInputAction> InteractExitAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
-	TSoftObjectPtr<UInputMappingContext> DriveMappingContext;
+	TObjectPtr<UInputMappingContext> DriveMappingContext;
 
 private:
 	void AddMappingContext();

@@ -25,6 +25,13 @@ public:
 	virtual void NotifyControllerChanged() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+	/** Audit accessors (regression tests; input must hard-reference cooked content). */
+	const TObjectPtr<UInputMappingContext>& GetDefaultMappingContext() const { return DefaultMappingContext; }
+	const TObjectPtr<UInputAction>& GetMoveAction() const { return MoveAction; }
+	const TObjectPtr<UInputAction>& GetLookAction() const { return LookAction; }
+	const TObjectPtr<UInputAction>& GetInteractAction() const { return InteractAction; }
+	const TObjectPtr<UInputAction>& GetPhoneToggleAction() const { return PhoneToggleAction; }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -58,7 +65,7 @@ protected:
 	TObjectPtr<UInputAction> PhoneDeclineAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
-	TSoftObjectPtr<UInputMappingContext> DefaultMappingContext;
+	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Courier404|Input")
 	TObjectPtr<UInputAction> MoveAction;

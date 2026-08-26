@@ -19,3 +19,7 @@ Packaged/
 Build/*/FileOpenOrder/
 *.opensdf
 *.sdf
+
+# Local agent/provider credentials and machine-specific Kilo config
+.kilo/kilo.jsonc
+.kilo/*.local.jsonc

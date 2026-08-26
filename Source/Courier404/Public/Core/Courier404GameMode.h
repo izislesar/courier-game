@@ -15,4 +15,5 @@ class COURIER404_API ACourier404GameMode : public AGameModeBase
 
 public:
 	ACourier404GameMode();
+	virtual void BeginPlay() override;
 };

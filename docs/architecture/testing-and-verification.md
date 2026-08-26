@@ -37,7 +37,7 @@ Where practical:
 
 For integrated issues verify the actual playable path.
 
-## Minimum pre-prod verification matrix
+## Core gameplay regression matrix
 
 ### Normal delivery
 
@@ -129,14 +129,24 @@ If UE5 is unavailable:
 - create a blocker with exact missing dependency/path/error;
 - do not fake a successful build.
 
-## Severity before overnight stop
+## Production severity and release gates
 
-Before final pre-prod gate:
-- all P0 bugs must be closed or explicitly blocked by environment;
-- P1 bugs affecting the main loop must be closed or clearly documented;
-- lower polish issues may remain backlog.
+For normal production runs:
+- no issue may claim completion while a known P0 regression caused by that issue remains;
+- P0 defects affecting launch, input, save integrity, main-loop progression or reproducible crashes are release blockers;
+- P1 defects affecting core UX, major presentation, representative performance or main-loop reliability must have an explicit owner/issue before a release candidate;
+- subjective feel/visual claims require human evidence.
 
-The final gate should produce a concise morning report in `docs/reports/preprod-status.md`.
+Release-candidate verification must additionally include:
+- Shipping build from a clean state;
+- clean-machine/package launch check;
+- human full-loop playtest;
+- save/load progression check;
+- Low + reference-hardware performance evidence;
+- package/content/security/license review;
+- exact open blocker list.
+
+Write phase-appropriate reports under `docs/reports/`; reports are evidence, not the task source of truth.
 
 
 ## Performance verification
@@ -155,7 +165,7 @@ At integration/performance gates, run a representative packaged-build traversal 
 
 Use Unreal Insights/ProfileGPU/Asset Audit when a budget is missed.
 
-Do not close the performance gate based on editor viewport FPS.
+Do not close a performance gate based on editor viewport FPS. If automated capture is not possible without disruptive visible-window loops, record the limitation and use one explicit human profiling/playtest gate instead of repeatedly relaunching the game.
 
 ## Scalability verification
 

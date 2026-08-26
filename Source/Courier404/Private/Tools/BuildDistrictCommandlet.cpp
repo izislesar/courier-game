@@ -77,12 +77,14 @@ namespace
 		}
 
 		UPointLightComponent* Light = NewObject<UPointLightComponent>(Pole);
+		Light->SetMobility(EComponentMobility::Movable);
 		Light->SetupAttachment(Pole->GetRootComponent());
 		Light->SetRelativeLocation(FVector(0.f, 0.f, 180.f));
 		Light->SetIntensity(1200.f);
 		Light->SetLightColor(FLinearColor(1.f, 0.82f, 0.6f));
 		Light->SetAttenuationRadius(900.f);
 		Light->SetCastShadows(false); // decorative lights stay cheap per performance budget
+		Pole->AddInstanceComponent(Light); // required for save/load persistence
 		Light->RegisterComponent();
 
 		return Pole;
@@ -158,12 +160,14 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 		// Warm practical inside apartment.
 		AStaticMeshActor* Anchor = SpawnBox(World, FVector(-1100, 100, 268), FVector(20, 20, 6));
 		UPointLightComponent* Lamp = NewObject<UPointLightComponent>(Anchor);
+		Lamp->SetMobility(EComponentMobility::Movable);
 		Lamp->SetupAttachment(Anchor->GetRootComponent());
 		Lamp->SetRelativeLocation(FVector(0, 0, -12));
 		Lamp->SetIntensity(600.f);
 		Lamp->SetLightColor(FLinearColor(1.f, 0.75f, 0.5f));
 		Lamp->SetAttenuationRadius(500.f);
 		Lamp->SetCastShadows(true); // interior key light
+		Anchor->AddInstanceComponent(Lamp); // required for save/load persistence
 		Lamp->RegisterComponent();
 	}
 
@@ -253,16 +257,19 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 	if (ADirectionalLight* Sun = Cast<ADirectionalLight>(
 		SpawnInLevel(ADirectionalLight::StaticClass(), FVector(0, 0, 500), FRotator(-35.f, 25.f, 0.f))))
 	{
-		Sun->GetLightComponent()->SetIntensity(2.5f);
-		Sun->GetLightComponent()->SetLightColor(FLinearColor(1.f, 0.93f, 0.85f));
+		// Movable everywhere: the pipeline never bakes lighting (headless authoring).
+		Sun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+		Sun->GetLightComponent()->SetIntensity(10.f); // believable daylight key (lux-scale)
+		Sun->GetLightComponent()->SetLightColor(FLinearColor(1.f, 0.95f, 0.88f));
 		Sun->GetLightComponent()->SetCastShadows(true);
 	}
 
 	if (ASkyLight* Sky = Cast<ASkyLight>(
 		SpawnInLevel(ASkyLight::StaticClass(), FVector(0, 0, 600), FRotator::ZeroRotator)))
 	{
-		Sky->GetLightComponent()->SetIntensity(1.f);
-		Sky->GetLightComponent()->SetMobility(EComponentMobility::Stationary);
+		// Real-time captured scene: no bake step, ambient follows the world.
+		Sky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+		Sky->GetLightComponent()->SetIntensity(2.f);
 	}
 
 	if (AExponentialHeightFog* Fog = Cast<AExponentialHeightFog>(

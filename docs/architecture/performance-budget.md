@@ -75,8 +75,9 @@ The baseline shipping path must be visually complete with:
 
 - conventional rasterized geometry;
 - explicit LODs or validated automatic LODs;
-- baked/static indirect lighting where the environment is static;
-- carefully limited movable lights;
+- reproducible low-cost indirect/ambient lighting appropriate to the authoring pipeline;
+- baked/static/mixed lighting where it can be generated and shipped reproducibly;
+- carefully limited movable lights, including the current generated-District exception documented in `docs/decisions/active-exceptions.md`;
 - conventional shadow maps or another non-VSM fallback;
 - reflection captures and/or inexpensive screen-space reflections;
 - SSAO or equivalent inexpensive ambient contact;
@@ -95,7 +96,7 @@ Rules:
 
 - Lumen must not be required for gameplay readability.
 - Lumen must not be the only source of usable indirect light in the authored level.
-- The level must be reviewed with Lumen disabled before a lighting task is accepted.
+- The level must be reviewed on a real renderer with Lumen disabled before a lighting task is accepted.
 - Lumen hardware ray tracing must never be required by the shipping baseline.
 - Prefer software Lumen first when evaluating a higher-quality preset.
 - If the Lumen preset causes material/lighting authoring to diverge significantly from the baseline path, remove it rather than maintaining two incompatible art pipelines.

@@ -1,3 +1,5 @@
+> **HISTORICAL MILESTONE — COMPLETED.** This file defines the former pre-production vertical-slice boundary. It is not the current task scope. Current production acceptance lives in `docs/product/production-readiness.md`; current work lives in Beads.
+
 # Courier 404 — Pre-Production Vertical Slice Scope
 
 ## Goal
