@@ -21,6 +21,7 @@
 #include "EngineUtils.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Misc/PackageName.h"
+#include "HAL/FileManager.h"
 #include "UObject/Package.h"
 #include "UObject/SavePackage.h"
 
@@ -88,9 +89,27 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 {
 	const FString MapPath = FPackageName::LongPackageNameToFilename(MapPackageName, FPackageName::GetMapPackageExtension());
 
-	UPackage* MapPackage = CreatePackage(MapPackageName);
-
-	UWorld* World = UWorld::CreateWorld(EWorldType::GamePreview, false, FName(TEXT("District01")), MapPackage);
+	// Fully load any previous build so the package never sits half-streamed,
+	// then wipe its actors; generation below repopulates deterministically.
+	FlushAsyncLoading();
+	UWorld* World = LoadObject<UWorld>(nullptr, TEXT("/Game/Maps/District01.District01"));
+	if (World)
+	{
+		ULevel* Existing = World->PersistentLevel;
+		for (int32 Idx = Existing->Actors.Num() - 1; Idx >= 0; --Idx)
+		{
+			if (AActor* Actor = Existing->Actors[Idx])
+			{
+				Actor->SetLifeSpan(0.f);      // immediate
+				Actor->Destroy();             // runtime destroy works headless
+			}
+		}
+	}
+	else
+	{
+		UPackage* NewPackage = CreatePackage(MapPackageName);
+		World = UWorld::CreateWorld(EWorldType::GamePreview, false, FName(TEXT("District01")), NewPackage);
+	}
 	if (!World)
 	{
 		UE_LOG(LogCourier404, Error, TEXT("Failed to create world"));
@@ -249,9 +268,14 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 	}
 
 	// -- Save as map package --
+	UPackage* MapPackage = World->GetOutermost();
+	World->SetFlags(RF_Public | RF_Standalone);
+	if (ULevel* Level0 = World->PersistentLevel)
+	{
+		Level0->SetFlags(RF_Public | RF_Standalone);
+	}
 	FSavePackageArgs Args;
 	Args.TopLevelFlags = RF_Public | RF_Standalone;
-	Args.Error = GError;
 	if (!UPackage::SavePackage(MapPackage, World, *MapPath, Args))
 	{
 		UE_LOG(LogCourier404, Error, TEXT("Failed to save map %s"), *MapPath);
