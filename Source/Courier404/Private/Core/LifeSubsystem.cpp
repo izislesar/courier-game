@@ -7,6 +7,9 @@ void ULifeSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	Life.BindClock(&Clock);
 
+	// Slice scenario: Lena expects a first-evening meeting.
+	Life.GetRelationship().Schedule(/*day*/1, /*hour*/20.f);
+
 	// Economy bridge: contract payouts credit the player wallet exactly once
 	// (the service guarantees single completion events).
 	if (UContractServiceSubsystem* Contracts = Collection.InitializeDependency<UContractServiceSubsystem>())

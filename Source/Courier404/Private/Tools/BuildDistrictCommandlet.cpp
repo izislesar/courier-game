@@ -4,6 +4,7 @@
 #include "Interaction/Courier404DropPoint.h"
 #include "Interaction/Courier404FoodSource.h"
 #include "Interaction/Courier404Package.h"
+#include "Interaction/Courier404Girlfriend.h"
 #include "Police/Courier404PoliceTrigger.h"
 #include "Encounters/HostileEncounterMarker.h"
 #include "Interaction/Courier404Bed.h"
@@ -175,6 +176,13 @@ int32 UBuildDistrictCommandlet::Main(const FString& Params)
 		SpawnInLevel(ACourier404FoodSource::StaticClass(), FVector(-200, -360, 50), FRotator(0.f, 180.f, 0.f))))
 	{
 		Food->MealPrice = 15;
+	}
+
+	// -- Meeting spot: Lena waits near the store courtyard --
+	if (!SpawnInLevel(ACourier404Girlfriend::StaticClass(), FVector(-320, -250, 50), FRotator(0.f, 90.f, 0.f)))
+	{
+		UE_LOG(LogCourier404, Error, TEXT("Failed to spawn girlfriend meeting spot"));
+		return 1;
 	}
 
 	// -- Bed inside the apartment --

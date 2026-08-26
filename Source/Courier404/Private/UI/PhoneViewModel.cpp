@@ -1,5 +1,6 @@
 #include "UI/PhoneViewModel.h"
 #include "Courier404.h"
+#include "Time/SimClock.h"
 
 void FCourier404PhoneViewModel::Bind(FCourier404ContractService* InContracts, const FCourier404SimClock* InClock)
 {
@@ -21,7 +22,9 @@ void FCourier404PhoneViewModel::Refresh()
 		return;
 	}
 
-	const bool bNightWindow = Clock ? Clock->IsNight() : true; // no clock: show all
+	const bool bNightWindow = Clock
+		? (Clock->IsNight() || Clock->GetPhase() == ECourier404DayPhase::Evening)
+		: true; // no clock: show all
 
 	// Deterministic order by contract id.
 	TArray<FName> Ids;

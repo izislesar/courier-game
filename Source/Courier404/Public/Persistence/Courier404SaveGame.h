@@ -45,9 +45,14 @@ public:
 	UPROPERTY() float Health01 = 1.f;
 	UPROPERTY() float TimeStarvingHours = 0.f;
 
-	// Relationship placeholder (full model lands with the relationship issue)
-	UPROPERTY() int32 RelationshipStrain = 0;
-	UPROPERTY() bool bRelationshipMissedPlan = false;
+	// Relationship
+	UPROPERTY() float RelationshipTrust = 0.7f;
+	UPROPERTY() int32 RelationshipMissedCount = 0;
+	UPROPERTY() int32 RelationshipLastInteractionDay = 0;
+	UPROPERTY() bool bRelationshipLastPlanMissed = false;
+	UPROPERTY() bool bRelationshipPlanActive = false;
+	UPROPERTY() int32 RelationshipPlannedDay = 1;
+	UPROPERTY() float RelationshipPlannedHour = 20.f;
 
 	// Consequence flags (police/hostile history)
 	UPROPERTY() TMap<FName, float> ConsequenceFlagsUntil;

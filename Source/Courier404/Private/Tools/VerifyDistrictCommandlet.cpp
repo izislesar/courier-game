@@ -4,6 +4,7 @@
 #include "Interaction/Courier404DropPoint.h"
 #include "Interaction/Courier404FoodSource.h"
 #include "Police/Courier404PoliceTrigger.h"
+#include "Interaction/Courier404Girlfriend.h"
 #include "Encounters/HostileEncounterMarker.h"
 #include "Interaction/Courier404Package.h"
 #include "Interaction/Courier404Bed.h"
@@ -76,13 +77,16 @@ int32 UVerifyDistrictCommandlet::Main(const FString& Params)
 	}
 	bool bHasPoliceTrigger = false;
 	bool bHasHostile = false;
+	bool bHasGirlfriend = false;
 	for (AActor* Actor : World->PersistentLevel->Actors)
 	{
 		bHasPoliceTrigger |= Actor && Actor->IsA<ACourier404PoliceTrigger>();
 		bHasHostile |= Actor && Actor->IsA<ACourier404HostileMarker>();
+		bHasGirlfriend |= Actor && Actor->IsA<ACourier404Girlfriend>();
 	}
 	if (!bHasPoliceTrigger) { UE_LOG(LogCourier404, Error, TEXT("Missing police trigger")); ++Failures; }
 	if (!bHasHostile) { UE_LOG(LogCourier404, Error, TEXT("Missing hostile marker")); ++Failures; }
+	if (!bHasGirlfriend) { UE_LOG(LogCourier404, Error, TEXT("Missing girlfriend meeting spot")); ++Failures; }
 
 	int32 Packages = 0;
 	for (AActor* Actor : World->PersistentLevel->Actors)

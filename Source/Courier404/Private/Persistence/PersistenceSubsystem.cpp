@@ -2,6 +2,7 @@
 #include "Courier404.h"
 #include "Contracts/ContractServiceSubsystem.h"
 #include "Core/LifeSubsystem.h"
+#include "Relationship/Relationship.h"
 #include "Kismet/GameplayStatics.h"
 
 void UPersistenceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -31,6 +32,13 @@ bool UPersistenceSubsystem::CaptureTo(UCourier404SaveGame* SaveObject) const
 	SaveObject->Fatigue01 = SrcLife.GetNeeds().GetFatigue01();
 	SaveObject->Health01 = SrcLife.GetNeeds().GetHealth01();
 	SaveObject->TimeStarvingHours = SrcLife.GetNeeds().GetTimeStarving();
+
+	const FCourier404Relationship& Rel = SrcLife.GetRelationship();
+	SaveObject->RelationshipTrust = Rel.GetTrust();
+	SaveObject->RelationshipMissedCount = Rel.GetMissedCount();
+	SaveObject->RelationshipLastInteractionDay = Rel.GetLastInteractionDay();
+	SaveObject->bRelationshipLastPlanMissed = Rel.WasLastPlanMissed();
+	SaveObject->bRelationshipPlanActive = Rel.HasPendingPlan();
 
 	SaveObject->ContractRecords.Reset();
 	for (const TPair<FName, FContractRuntimeState>& Pair : ContractsSub->GetDomain().GetInstances())
@@ -76,6 +84,10 @@ bool UPersistenceSubsystem::ApplyFrom(const UCourier404SaveGame* SaveObject)
 
 	DstLife.GetNeeds().Restore(SaveObject->Hunger01, SaveObject->Fatigue01,
 		SaveObject->Health01, SaveObject->TimeStarvingHours);
+
+	DstLife.GetRelationship().Restore(SaveObject->RelationshipTrust, SaveObject->RelationshipMissedCount,
+		SaveObject->bRelationshipLastPlanMissed, SaveObject->bRelationshipPlanActive,
+		SaveObject->RelationshipPlannedDay, SaveObject->RelationshipPlannedHour);
 
 	// Contract instances restore exactly as saved: completed jobs never re-pay.
 	FCourier404ContractService& Domain = ContractsSub->GetDomain();

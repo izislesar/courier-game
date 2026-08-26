@@ -4,6 +4,7 @@
 #include "Economy/Wallet.h"
 #include "Needs/NeedsModel.h"
 #include "Time/SimClock.h"
+#include "Relationship/Relationship.h"
 
 /**
  * Bounded life service for the pre-prod single player: wallet + needs +
@@ -28,6 +29,9 @@ public:
 	FCourier404Needs& GetNeeds() { return Needs; }
 	const FCourier404Needs& GetNeeds() const { return Needs; }
 
+	FCourier404Relationship& GetRelationship() { return Relationship; }
+	const FCourier404Relationship& GetRelationship() const { return Relationship; }
+
 	/**
 	 * Buys and eats one meal at the given price. Refuses unaffordable/invalid
 	 * prices without touching any state. Advances needs by elapsed time first.
@@ -47,4 +51,5 @@ private:
 	FCourier404SimClock* Clock = nullptr;
 	FCourier404Wallet Wallet;
 	FCourier404Needs Needs;
+	FCourier404Relationship Relationship;
 };
